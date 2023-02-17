@@ -64,7 +64,7 @@ public class QuestionController {
         selection.setChapterId(chapterId);
         selection.setQuestionId(questionId);
         model.addAttribute("selection", selection);
-        return "welcome"; //view
+        return "question"; //view
     }
 
     @PostMapping("/questions")
@@ -96,7 +96,7 @@ public class QuestionController {
         selection.setChapterId(chapterId);
         selection.setQuestionId(questionId);
         model.addAttribute("selection", selection);
-        return "welcome"; //view
+        return "question"; //view
     }
 
 }

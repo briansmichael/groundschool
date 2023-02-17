@@ -10,4 +10,6 @@ public class ApplicationProperties {
     private String secretKey;
 
     private String initVector;
+
+    private String dbSrcLocation;
 }

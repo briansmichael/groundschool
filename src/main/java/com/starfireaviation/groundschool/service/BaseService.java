@@ -1,5 +1,6 @@
 package com.starfireaviation.groundschool.service;
 
+import com.starfireaviation.groundschool.config.ApplicationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.engines.AESEngine;
@@ -8,6 +9,7 @@ import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.util.encoders.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -27,10 +29,13 @@ public abstract class BaseService {
      */
     protected PaddedBufferedBlockCipher cipher;
 
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
     protected Connection getSQLLiteConnection(final String course) {
         Connection sqlLiteConn = null;
         try {
-            String sqlLiteJDBCUrl = "jdbc:sqlite:/Users/brian/groundschool/db/" + course + ".db";
+            String sqlLiteJDBCUrl = "jdbc:sqlite:" + applicationProperties.getDbSrcLocation() + course + ".db";
             DriverManager.registerDriver(new org.sqlite.JDBC());
             sqlLiteConn = DriverManager.getConnection(sqlLiteJDBCUrl);
         } catch (SQLException e) {
