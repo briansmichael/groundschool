@@ -2,6 +2,7 @@ groundschool:
   secret-key: ${GROUNDSCHOOL_SECRET_KEY}
   init-vector: ${GROUNDSCHOOL_INIT_VECTOR}
   db-source-location: ${GROUNDSCHOOL_DB_SRC_LOCATION}
+  images-dir: ${GROUNDSCHOOL_IMAGES_DIR}
 spring:
   datasource:
     url: ${GROUNDSCHOOL_DB_URL}

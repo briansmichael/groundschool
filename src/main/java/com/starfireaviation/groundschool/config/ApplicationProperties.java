@@ -12,4 +12,6 @@ public class ApplicationProperties {
     private String initVector;
 
     private String dbSrcLocation;
+
+    private String imagesDir;
 }

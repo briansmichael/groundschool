@@ -1,5 +1,6 @@
 package com.starfireaviation.groundschool.service;
 
+import com.starfireaviation.groundschool.config.ApplicationProperties;
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.Image;
 import com.starfireaviation.groundschool.model.repository.ImageRepository;
@@ -20,13 +21,14 @@ import java.sql.SQLException;
 @Slf4j
 public class ImageService extends BaseService {
 
-    public static final String IMAGE_DIR = "/Users/brian/groundschool/images";
-
     @Autowired
     private ImageRepository imageRepository;
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     @Async
     public void update() {
@@ -56,7 +58,7 @@ public class ImageService extends BaseService {
                     image.setImageLibraryId(rs.getLong(CommonConstants.THIRTEEN));
                     if (image.getFileName() != null && !"".equals(image.getFileName())) {
                         //final String fileName = IMAGE_DIR + "/" + image.getFileName();
-                        final String fileName = IMAGE_DIR + "/" + image.getId() + ".png";
+                        final String fileName = applicationProperties.getImagesDir() + image.getId() + ".png";
                         FileUtils.writeByteArrayToFile(new File(fileName), rs.getBytes(CommonConstants.EIGHT));
                     }
                     imageRepository.save(image);
