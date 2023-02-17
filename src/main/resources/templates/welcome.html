@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Spring Boot Thymeleaf Hello World Example</title>
+
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+
+<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">starfireaviation.com</a>
+</nav -->
+
+<main role="main" class="container">
+    <form id="selectionForm"
+          action="/questions"
+          method="post">
+        Groups:
+        <select th:id="groups"
+                th:name="groups"
+                onchange="changeGroup()">
+            <option th:each="group : ${groups.entrySet()}"
+                    th:value="${group.getKey()}"
+                    th:text="${group.getValue()}"
+                    th:selected="${selection.getGroupId()} == ${group.getKey()}">
+            </option>
+        </select>
+        <input type="hidden"
+               id="groupId"
+               name="groupId"
+               th:value="${selection.getGroupId()}">
+        <br>
+        Chapters:
+        <select th:id="chapters"
+                th:name="chapters"
+                onchange="changeChapter()">
+            <option th:each="chapter : ${chapters.entrySet()}"
+                    th:value="${chapter.getKey()}"
+                    th:text="${chapter.getValue()}"
+                    th:selected="${selection.getChapterId()} == ${chapter.getKey()}">
+            </option>
+        </select>
+        <input type="hidden"
+               id="chapterId"
+               name="chapterId"
+               th:value="${selection.getChapterId()}">
+        <br>
+        Questions:
+        <select th:id="questions"
+                th:name="questions"
+                onchange="changeQuestion()">
+            <option th:each="question : ${questions}"
+                    th:value="${question.getQuestionId()}"
+                    th:text="${question.getText()}"
+                    th:selected="${selection.getQuestionId()} == ${question.getQuestionId()}">
+            </option>
+        </select>
+        <input type="hidden"
+               id="questionId"
+               name="questionId"
+               th:value="${selection.getQuestionId()}">
+        <br>
+        <hr>
+        <br>
+        <div th:remove="tag" th:utext="${question.getText()}"></div>
+        <div th:if="${questionImages}">
+        <table>
+            <tr th:each="image: ${questionImages}">
+                <td><img th:src="@{${'http://media.starfireaviation.com/media/' + image + '.png'}}"/></td>
+            </tr>
+        </table>
+        </div>
+        <ol>
+            <li th:each="answer : ${answers}"
+                th:text="${answer.getText()}"
+                th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}"></li>
+        </ol>
+        <br>
+        <hr>
+        <div th:remove="tag" th:utext="${question.getExplanation()}"></div>
+    </form>
+</main>
+<!-- /.container -->
+<script type="text/javascript">
+    function changeGroup() {
+        document.getElementById("groupId").value = document.getElementById("groups").value;
+        document.getElementById("selectionForm").submit();
+    }
+    function changeChapter() {
+        document.getElementById("chapterId").value = document.getElementById("chapters").value;
+        document.getElementById("selectionForm").submit();
+    }
+    function changeQuestion() {
+        document.getElementById("questionId").value = document.getElementById("questions").value;
+        document.getElementById("selectionForm").submit();
+    }
+</script>
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>
