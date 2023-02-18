@@ -77,7 +77,7 @@
             </tr>
         </table>
         </div>
-        <p>Answers:&nbsp;&nbsp;<button th:text="reveal" onmouseover="revealAnswer()" onmouseleave="hideAnswer()"></button></p>
+        <p>Answers:</p>
         <table th:border="0" th:style="'margin-left:30px'">
             <tr th:each="answer : ${answers}">
                 <td th:id="${answer.getCorrect() ? 'correctAnswerChoice' : 'incorrectAnswerChoice'}"
@@ -87,10 +87,13 @@
                     th:text="${answer.getText()}"></td>
             </tr>
         </table>
-        <br>
-        <hr>
-        <div th:remove="tag" th:utext="${question.getExplanation()}"></div>
     </form>
+    <button th:id="revealBtn" th:text="reveal" onclick="revealAnswer()"></button>
+    <br>
+    <hr>
+    <div id="explanation" th:style="'display:none'">
+        <div th:remove="tag" th:utext="${question.getExplanation()}"></div>
+    </div>
 </main>
 <!-- /.container -->
 <script type="text/javascript">
@@ -107,12 +110,17 @@
         document.getElementById("selectionForm").submit();
     }
     function revealAnswer() {
-        document.getElementById("correctAnswerChoice").style.color = 'green';
-        document.getElementById("correctAnswerText").style.color = 'green';
-    }
-    function hideAnswer() {
-        document.getElementById("correctAnswerChoice").style.color = 'black';
-        document.getElementById("correctAnswerText").style.color = 'black';
+        if (document.getElementById("explanation").style.display === 'none') {
+            document.getElementById("correctAnswerChoice").style.color = 'green';
+            document.getElementById("correctAnswerText").style.color = 'green';
+            document.getElementById("revealBtn").innerText = 'hide';
+            document.getElementById("explanation").style.display = 'block';
+        } else {
+            document.getElementById("correctAnswerChoice").style.color = 'black';
+            document.getElementById("correctAnswerText").style.color = 'black';
+            document.getElementById("revealBtn").innerText = 'reveal';
+            document.getElementById("explanation").style.display = 'none';
+        }
     }
 </script>
 
