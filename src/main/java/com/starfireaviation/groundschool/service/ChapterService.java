@@ -55,6 +55,10 @@ public class ChapterService extends BaseService {
         return map;
     }
 
+    public Chapter getChapter(final Long chapterId) {
+        return chapterRepository.findById(chapterId).orElse(null);
+    }
+
     public Map<Long, String> getChapterMap(final Long groupId) {
         final Map<Long, String> map = new HashMap<>();
         chapterRepository

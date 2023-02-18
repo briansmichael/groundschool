@@ -17,6 +17,13 @@
 </nav -->
 
 <main role="main" class="container">
+    <form id="getQuestionForm"
+          action="/questions"
+          method="get">
+        Question ID:
+        <input name="questionId" type="text" th:value="${selection.getQuestionId()}">
+        <input type="submit" value="Search">
+    </form>
     <form id="selectionForm"
           action="/questions"
           method="post">
