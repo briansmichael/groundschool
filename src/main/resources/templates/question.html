@@ -71,7 +71,8 @@
         <div th:if="${questionImages}">
         <table>
             <tr th:each="image: ${questionImages}">
-                <td><img th:src="@{${'http://groundschool.starfireaviation.com/media/' + image + '.png'}}"/></td>
+                <td><img th:src="@{${'http://groundschool.starfireaviation.com:8080/images/' + image}}"/></td>
+                <!-- td><img th:src="@{${'http://localhost:8080/images/' + image}}"/></td -->
             </tr>
         </table>
         </div>

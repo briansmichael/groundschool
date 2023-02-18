@@ -57,7 +57,6 @@ public class ImageService extends BaseService {
                     image.setSortBy(rs.getLong(CommonConstants.TWELVE));
                     image.setImageLibraryId(rs.getLong(CommonConstants.THIRTEEN));
                     if (image.getFileName() != null && !"".equals(image.getFileName())) {
-                        //final String fileName = IMAGE_DIR + "/" + image.getFileName();
                         final String fileName = applicationProperties.getImagesDir() + image.getId() + ".png";
                         FileUtils.writeByteArrayToFile(new File(fileName), rs.getBytes(CommonConstants.EIGHT));
                     }
@@ -71,5 +70,15 @@ public class ImageService extends BaseService {
 
     public String getImageNameForId(final Long imageId) {
         return imageRepository.findById(imageId).map(Image::getImageName).orElse(null);
+    }
+
+    public byte[] getImage(final Long imageId) {
+        try {
+            final File file = FileUtils.getFile(applicationProperties.getImagesDir(), imageId + ".png");
+            return FileUtils.readFileToByteArray(file);
+        } catch (IOException e) {
+            log.info("Unable to read image file for ID: {}", imageId);
+        }
+        return null;
     }
 }
