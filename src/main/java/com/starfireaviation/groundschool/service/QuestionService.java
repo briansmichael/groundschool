@@ -77,7 +77,7 @@ public class QuestionService extends BaseService {
             final String group = matcher.group(1);
             //log.info("Found pattern match: {}", group);
             final String replacementText = returnText.toString().replaceAll("\\{\\{IMAGE"+group+"}}",
-                    "<IMG SRC=\"http://media.starfireaviation.com/media/"+group+".png\">");
+                    "<IMG SRC=\"http://groundschool.starfireaviation.com/images/"+group+"\">");
             returnText.replace(0, returnText.length(), replacementText);
         }
         return returnText.toString();

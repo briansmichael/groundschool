@@ -66,6 +66,7 @@
                th:value="${selection.getQuestionId()}">
         <br>
         <hr>
+        <hr>
         <br>
         <div th:remove="tag" th:utext="${question.getText()}"></div>
         <div th:if="${questionImages}">
@@ -76,11 +77,17 @@
             </tr>
         </table>
         </div>
-        <ol>
-            <li th:each="answer : ${answers}"
-                th:text="${answer.getText()}"
-                th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}"></li>
-        </ol>
+        <br>
+        Answers:
+        <br>
+        <table th:border="0">
+            <tr th:each="answer : ${answers}">
+                <td th:text="${answer.getChoice()}"
+                    th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}"></td>
+                <td th:text="${answer.getText()}"
+                    th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}"></td>
+            </tr>
+        </table>
         <br>
         <hr>
         <div th:remove="tag" th:utext="${question.getExplanation()}"></div>
