@@ -77,15 +77,14 @@
             </tr>
         </table>
         </div>
-        <br>
-        Answers:
-        <br>
-        <table th:border="0">
+        <p>Answers:&nbsp;&nbsp;<button th:text="reveal" onmouseover="revealAnswer()" onmouseleave="hideAnswer()"></button></p>
+        <table th:border="0" th:style="'margin-left:30px'">
             <tr th:each="answer : ${answers}">
-                <td th:text="${answer.getChoice()}"
-                    th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}"></td>
-                <td th:text="${answer.getText()}"
-                    th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}"></td>
+                <td th:id="${answer.getCorrect() ? 'correctAnswerChoice' : 'incorrectAnswerChoice'}"
+                    th:text="${answer.getChoice()}"></td>
+                <!-- th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}" -->
+                <td th:id="${answer.getCorrect() ? 'correctAnswerText' : 'incorrectAnswerText'}"
+                    th:text="${answer.getText()}"></td>
             </tr>
         </table>
         <br>
@@ -106,6 +105,14 @@
     function changeQuestion() {
         document.getElementById("questionId").value = document.getElementById("questions").value;
         document.getElementById("selectionForm").submit();
+    }
+    function revealAnswer() {
+        document.getElementById("correctAnswerChoice").style.color = 'green';
+        document.getElementById("correctAnswerText").style.color = 'green';
+    }
+    function hideAnswer() {
+        document.getElementById("correctAnswerChoice").style.color = 'black';
+        document.getElementById("correctAnswerText").style.color = 'black';
     }
 </script>
 
