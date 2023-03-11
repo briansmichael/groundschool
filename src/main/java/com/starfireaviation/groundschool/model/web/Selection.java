@@ -10,4 +10,6 @@ public class Selection {
     private Long chapterId;
 
     private Long questionId;
+
+    private Long quizId;
 }

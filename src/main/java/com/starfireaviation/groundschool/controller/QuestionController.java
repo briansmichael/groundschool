@@ -106,11 +106,7 @@ public class QuestionController {
 
     private String questionView(final Long groupId, final Long chapterId, final Long questionId, final Model model) {
         model.addAttribute("question", questionService.getQuestion(questionId));
-        final List<Answer> answers = answerService.getAnswersForQuestion(questionId).stream()
-                .sorted().collect(Collectors.toList());
-        model.addAttribute("answers", answers);
-        final List<Long> questionImageIds = questionRefImageService.getImageIdsForQuestionId(questionId);
-        model.addAttribute("questionImages", questionImageIds);
+
         final Selection selection = new Selection();
         selection.setGroupId(groupId);
         selection.setChapterId(chapterId);

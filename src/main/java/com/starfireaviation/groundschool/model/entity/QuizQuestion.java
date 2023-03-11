@@ -16,29 +16,21 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import com.starfireaviation.groundschool.model.enums.QuizType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * Quiz.
+ * QuizQuestion.
  */
 @Entity
 @Data
-@Table(name = "quiz")
-public class Quiz implements Serializable {
-
-    /**
-     * Default SerialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
+@Table(name = "quiz_question")
+public class QuizQuestion implements Serializable {
 
     /**
      * ID.
@@ -48,32 +40,15 @@ public class Quiz implements Serializable {
     private Long id;
 
     /**
-     * Title.
+     * Question ID.
      */
-    @Column(name = "title")
-    private String title;
+    @Column(name = "question_id")
+    private Long questionId;
 
     /**
-     * LessonPlan ID.
+     * Quiz ID.
      */
-    @Column(name = "lesson_plan_id")
-    private Long lessonPlanId;
+    @Column(name = "quiz_id")
+    private Long quizId;
 
-    /**
-     * QuizType.
-     */
-    @Column(name = "quiz_type")
-    private QuizType quizType;
-
-    /**
-     * List of Questions.
-     */
-    @Transient
-    private List<Question> questions;
-
-    /**
-     * LessonPlan.
-     */
-    @Transient
-    private LessonPlan lessonPlan;
 }

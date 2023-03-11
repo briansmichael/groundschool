@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,6 +25,12 @@ public class QuestionService extends BaseService {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private AnswerService answerService;
+
+    @Autowired
+    private QuestionRefImageService questionRefImageService;
 
     @Autowired
     private CourseService courseService;
@@ -66,7 +73,16 @@ public class QuestionService extends BaseService {
     }
 
     public Question getQuestion(final Long questionId) {
-        return questionRepository.findById(questionId).orElse(null);
+        final Question question = questionRepository.findById(questionId).orElse(null);
+        if (question != null) {
+            question.setAnswers(answerService
+                    .getAnswersForQuestion(questionId)
+                    .stream()
+                    .sorted()
+                    .collect(Collectors.toList()));
+            question.setImageIds(questionRefImageService.getImageIdsForQuestionId(questionId));
+        }
+        return question;
     }
 
     private String processImages(final String rawText) {

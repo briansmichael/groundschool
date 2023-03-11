@@ -20,6 +20,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -94,5 +95,17 @@ public class Question implements Serializable {
      */
     @Column(name = "lsc_id")
     private Long lscId;
+
+    /**
+     * List of answers.
+     */
+    @Transient
+    private List<Answer> answers;
+
+    /**
+     * List of image IDs.
+     */
+    @Transient
+    private List<Long> imageIds;
 
 }

@@ -76,17 +76,16 @@
         <hr>
         <br>
         <div th:remove="tag" th:utext="${question.getText()}"></div>
-        <div th:if="${questionImages}">
+        <div th:if="${question.getImageIds()}">
         <table>
-            <tr th:each="image: ${questionImages}">
+            <tr th:each="image: ${question.getImageIds}">
                 <td><img th:src="@{${'http://groundschool.starfireaviation.com:8080/images/' + image}}"/></td>
                 <!-- td><img th:src="@{${'http://localhost:8080/images/' + image}}"/></td -->
             </tr>
         </table>
         </div>
-        <p>Answers:</p>
         <table th:border="0" th:style="'margin-left:30px'">
-            <tr th:each="answer : ${answers}">
+            <tr th:each="answer : ${question.getAnswers}">
                 <td th:id="${answer.getCorrect() ? 'correctAnswerChoice' : 'incorrectAnswerChoice'}"
                     th:text="${answer.getChoice()}"></td>
                 <!-- th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}" -->
