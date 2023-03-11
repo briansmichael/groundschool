@@ -19,6 +19,7 @@ import com.starfireaviation.groundschool.service.SubjectMatterCodeService;
 import com.starfireaviation.groundschool.service.TestService;
 import com.starfireaviation.groundschool.service.TextConstService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,6 +83,7 @@ public class UpdateController {
     private TextConstService textConstService;
 
     @PostMapping
+    @Scheduled(cron = "0 0 10 1,10,20 * ?")
     public void updateAll() {
         acsService.update();
         answerService.update();
