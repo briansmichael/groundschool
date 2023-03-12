@@ -39,7 +39,7 @@
             <table th:border="0" th:style="'margin-left:30px'">
                 <tr th:each="answer : ${question.getAnswers()}">
                     <td th:id="${answer.getCorrect() ? 'correctAnswerChoice' : 'incorrectAnswerChoice'}"
-                        th:text="${answer.getChoice()}"></td>
+                        th:text="${answer.getChoice() + ':'}"></td>
                     <!-- th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}" -->
                     <td th:id="${answer.getCorrect() ? 'correctAnswerText' : 'incorrectAnswerText'}"
                         th:text="${answer.getText()}"></td>
