@@ -24,11 +24,12 @@
         <input name="eventId" type="text" th:value="${selection.getEventId()}">
         <input type="submit" value="Search">
     </form>
-    <ol>
+    <p>Upcoming events:</p>
+    <ul>
         <li th:each="event : ${events}">
             <div th:text="${event.getStartTime()}"></div><div th:text="${event.getTitle()}"></div>
         </li>
-    </ol>
+    </ul>
 </main>
 <!-- /.container -->
 
