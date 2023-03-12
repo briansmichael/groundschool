@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Ground School</title>
+
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+
+<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">starfireaviation.com</a>
+</nav -->
+
+<main role="main" class="container">
+    <form id="getQuestionForm"
+          action="/events"
+          method="get">
+        Event ID:
+        <input name="eventId" type="text" th:value="${selection.getEventId()}">
+        <input type="submit" value="Search">
+    </form>
+    <ol>
+        <li th:each="event : ${events}">
+            <div th:text="${event.getStartTime()}"></div><div th:text="${event.getTitle()}"></div>
+        </li>
+    </ol>
+</main>
+<!-- /.container -->
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>

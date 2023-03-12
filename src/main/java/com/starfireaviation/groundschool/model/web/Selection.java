@@ -12,4 +12,6 @@ public class Selection {
     private Long questionId;
 
     private Long quizId;
+
+    private Long eventId;
 }

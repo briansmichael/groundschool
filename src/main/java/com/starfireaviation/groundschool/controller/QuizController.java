@@ -39,19 +39,19 @@ public class QuizController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping("/quizzes")
     public String createQuiz(final Quiz quiz, final Model model) {
         final Quiz savedQuiz = quizService.createOrUpdate(quiz);
         return quizView(savedQuiz.getId(), model);
     }
 
-    @PutMapping("/")
+    @PutMapping("/quizzes")
     public String updateQuiz(final Quiz quiz, final Model model) {
         final Quiz savedQuiz = quizService.createOrUpdate(quiz);
         return quizView(savedQuiz.getId(), model);
     }
 
-    @PostMapping("/{quizId}/{questionId}")
+    @PostMapping("/quizzes/{quizId}/{questionId}")
     public String addQuestion(@PathVariable("quizId") final Long quizId,
                               @PathVariable("questionId") final Long questionId,
                               final Model model) {
@@ -59,7 +59,7 @@ public class QuizController {
         return quizView(quizId, model);
     }
 
-    @DeleteMapping("/{quizId}/{questionId}")
+    @DeleteMapping("/quizzes/{quizId}/{questionId}")
     public String deleteQuestion(@PathVariable("quizId") final Long quizId,
                                  @PathVariable("questionId") final Long questionId,
                                  final Model model) {

@@ -44,11 +44,6 @@ public class QuestionController {
     @Autowired
     private AnswerService answerService;
 
-    @GetMapping("/")
-    public String main(final Model model) {
-        return defaultView(model);
-    }
-
     @GetMapping("/questions")
     public String getQuestion(@PathParam("questionId") final Long questionId, final Model model) {
         try {

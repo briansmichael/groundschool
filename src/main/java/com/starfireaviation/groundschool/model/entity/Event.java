@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "event")
-public class Event implements Serializable {
+public class Event implements Comparable, Serializable {
 
     /**
      * Default SerialVersionUID.
@@ -118,4 +118,18 @@ public class Event implements Serializable {
     @Column(name = "event_lead")
     private Long lead;
 
+    @Override
+    public int compareTo(final Object other) {
+        Event otherEvent = null;
+        if (other instanceof Event) {
+            otherEvent = (Event) other;
+        }
+        if (otherEvent == null) {
+            return 0;
+        }
+        if (getStartTime().isBefore(otherEvent.getStartTime())) {
+            return -1;
+        }
+        return 1;
+    }
 }
