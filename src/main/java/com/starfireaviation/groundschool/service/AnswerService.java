@@ -15,17 +15,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class AnswerService extends BaseService {
-
-    /**
-     * Answer Choices List.
-     */
-    public static final String ANSWER_CHOICES = "A,B,C,D,E,F,G,H";
 
     @Autowired
     private AnswerRepository answerRepository;
@@ -36,11 +32,17 @@ public class AnswerService extends BaseService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    /**
+     * Choice map.
+     */
+    private final Map<Long, List<Long>> choices = new HashMap<>();
+
     @Async
     public void update() {
         initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
-        final String query = "SELECT AnswerID, AnswerText, QuestionID, IsCorrect, LastMod FROM Answers";
+        final String query = "SELECT AnswerID, AnswerText, QuestionID, IsCorrect, LastMod FROM Answers ORDER BY AnswerID";
         for (final String course : courseService.getCourseList()) {
+            choices.clear();
             log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
@@ -53,7 +55,7 @@ public class AnswerService extends BaseService {
                     answer.setQuestionId(rs.getLong(CommonConstants.THREE));
                     answer.setCorrect(rs.getBoolean(CommonConstants.FOUR));
                     answer.setLastModified(rs.getDate(CommonConstants.FIVE));
-                    answer.setChoice(deriveChoice(answer.getChoice(), answer.getQuestionId()));
+                    answer.setChoice(deriveChoice(answer.getQuestionId(), answer.getAnswerId()));
                     answerRepository.save(answer);
                 }
             } catch (SQLException | InvalidCipherTextException e) {
@@ -67,23 +69,29 @@ public class AnswerService extends BaseService {
     }
 
     /**
-     * Derives choice for answer, if not already set.
+     * Derives answer choice.
      *
-     * @param choice prior value
-     * @param questionId question ID
-     * @return derived choice value
+     * @param questionId Question ID
+     * @param answerId Answer ID
+     * @return choice
      */
-    private String deriveChoice(final String choice, final Long questionId) {
-        if (choice != null) {
-            return choice;
+    private String deriveChoice(final Long questionId, final Long answerId) {
+        final List<Long> answerIds;
+        if (choices.containsKey(questionId)) {
+            answerIds = choices.get(questionId);
+        } else {
+            answerIds = new ArrayList<>();
         }
-        final ArrayList<String> choices = new ArrayList<>(Arrays.asList(ANSWER_CHOICES.split(",")));
-        answerRepository.findAllByQuestionId(questionId)
-                .ifPresent(answerEntities -> answerEntities
-                        .stream()
-                        .filter(answer -> answer.getChoice() != null)
-                        .forEach(answer -> choices.remove(answer.getChoice())));
-        return choices.get(0);
+        final String choice = switch (answerIds.size()) {
+            case 0 -> "A";
+            case 1 -> "B";
+            case 2 -> "C";
+            case 3 -> "D";
+            case 4 -> "E";
+            default -> null;
+        };
+        answerIds.add(answerId);
+        choices.put(questionId, answerIds);
+        return choice;
     }
-
 }
