@@ -6,17 +6,18 @@
 
     <title>Starfire Aviation Ground School</title>
 
-    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 
 <body>
 
+    <a th:href="@{/}">home</a>
 <!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#">starfireaviation.com</a>
 </nav -->
 
-<main role="main" class="container">
+<!-- main role="main" class="container" -->
     <form id="getQuestionForm"
           action="/questions"
           method="get">
@@ -101,7 +102,7 @@
     <div id="explanation" th:style="'display:none'">
         <div th:remove="tag" th:utext="${question.getExplanation()}"></div>
     </div>
-</main>
+<!-- /main -->
 <!-- /.container -->
 <script type="text/javascript">
     function changeGroup() {
@@ -131,6 +132,6 @@
     }
 </script>
 
-<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+<!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
 </body>
 </html>

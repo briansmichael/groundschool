@@ -6,7 +6,7 @@
 
     <title>Ground School</title>
 
-    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 
@@ -16,90 +16,29 @@
     <a class="navbar-brand" href="#">starfireaviation.com</a>
 </nav -->
 
-<main role="main" class="container">
+<!-- main role="main" class="container" -->
+    <a th:href="@{/}">home</a> | <a th:href="@{/lessonplans/new}">New</a>
     <h1>Lesson Plans</h1>
-    <table>
-        <tr>
-            <td>
-                <ul>
-                    <li th:each="lessonPlan : ${lessonPlans}">
-                        <table th:border="0">
-                            <tr>
-                                <td>
-                                    <a th:href="@{/lessonplans(lessonPlanId=${lessonPlan.getId()})}" th:text="${lessonPlan.getTitle()}"></a>
-                                </td>
-                                <td>
-                                    <form th:action="@{/lessonplans}" th:object="${lessonPlan}" th:method="delete">
-                                        <input type="hidden" th:field="*{id}" />
-                                        <input type="submit" value="Delete">
-                                    </form>
-                                </td>
-                            </tr>
-                        </table>
-                    </li>
-                </ul>
-            </td>
-            <td>
-                <form id="createLessonPlanForm"
-                      th:action="@{/lessonplans}"
-                      th:method="post"
-                      th:object="${lessonPlan}">
-                    Title:<br>
-                    <div th:remove="tag" th:utext="*{title}"></div>
-                    <br>
-                    <input name="title" type="text" th:value="*{title}">
-                    <br>
-                    Summary:<br>
-                    <div th:remove="tag" th:utext="*{summary}"></div>
-                    <br>
-                    <textarea name="summary" rows="4" cols="80" th:field="*{summary}"></textarea>
-                    <br>
-                    Objective:<br>
-                    <div th:remove="tag" th:utext="*{objective}"></div>
-                    <br>
-                    <textarea name="objective" rows="4" cols="80" th:field="*{objective}"></textarea>
-                    <br>
-                    Content:<br>
-                    <div th:remove="tag" th:utext="*{content}"></div>
-                    <br>
-                    <textarea name="content" rows="4" cols="80" th:field="*{content}"></textarea>
-                    <br>
-                    Schedule:<br>
-                    <div th:remove="tag" th:utext="*{schedule}"></div>
-                    <br>
-                    <textarea name="schedule" rows="4" cols="80" th:field="*{schedule}"></textarea>
-                    <br>
-                    Equipment:<br>
-                    <div th:remove="tag" th:utext="*{equipment}"></div>
-                    <br>
-                    <textarea name="equipment" rows="4" cols="80" th:field="*{equipment}"></textarea>
-                    <br>
-                    Instructor Actions:<br>
-                    <div th:remove="tag" th:utext="*{instructorActions}"></div>
-                    <br>
-                    <textarea name="instructorActions" rows="4" cols="80" th:field="*{instructorActions}"></textarea>
-                    <br>
-                    Student Actions:<br>
-                    <div th:remove="tag" th:utext="*{studentActions}"></div>
-                    <br>
-                    <textarea name="studentActions" rows="4" cols="80" th:field="*{studentActions}"></textarea>
-                    <br>
-                    Completion Standards:<br>
-                    <div th:remove="tag" th:utext="*{completionStandards}"></div>
-                    <br>
-                    <textarea name="completionStandards" rows="4" cols="80" th:field="*{completionStandards}"></textarea>
-                    <br>
-                    Presentable:<br>
-                    <input type="checkbox" th:value="${lessonPlan.isPresentable()}">
-                    <br>
-                    <input type="submit" value="Update">
-                </form>
-            </td>
-        </tr>
-    </table>
-</main>
+<ul>
+    <li th:each="lessonPlan : ${lessonPlans}">
+        <table th:border="0">
+            <tr>
+                <td>
+                    <a th:href="@{/lessonplans/{id}(id=${lessonPlan.getId()})}" th:text="${lessonPlan.getTitle()}"></a>
+                </td>
+                <td>
+                    <a th:href="@{/lessonplans/edit/{id}(id=${lessonPlan.getId()})}">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/lessonplans/delete/{id}(id=${lessonPlan.getId()})}">Delete</a>
+                </td>
+            </tr>
+        </table>
+    </li>
+</ul>
+<!-- /main -->
 <!-- /.container -->
 
-<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+<!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
 </body>
 </html>

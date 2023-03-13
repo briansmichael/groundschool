@@ -3,12 +3,10 @@ package com.starfireaviation.groundschool.controller;
 import com.starfireaviation.groundschool.model.entity.LessonPlan;
 import com.starfireaviation.groundschool.model.web.Selection;
 import com.starfireaviation.groundschool.service.LessonPlanService;
-import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +22,12 @@ public class LessonPlanController {
     private LessonPlanService lessonPlanService;
 
     @GetMapping("/lessonplans")
-    public String getLessonPlan(@PathParam("lessonPlanId") final Long lessonPlanId, final Model model) {
+    public String getLessonPlans(final Model model) {
+        return lessonPlansView(model);
+    }
+
+    @GetMapping("/lessonplans/{id}")
+    public String getLessonPlan(@PathVariable("id") final Long lessonPlanId, final Model model) {
         if (lessonPlanId == null) {
             return lessonPlansView(model);
         }
@@ -33,6 +36,18 @@ public class LessonPlanController {
         } catch (Exception e) {
             return lessonPlansView(model);
         }
+    }
+
+    @GetMapping("/lessonplans/edit/{id}")
+    public String editLessonPlan(@PathVariable("id") final Long lessonPlanId, final Model model) {
+        log.info("Editing LessonPlan.");
+        return editLessonPlanView(lessonPlanId, model);
+    }
+
+    @GetMapping("/lessonplans/new")
+    public String newLessonPlan(final Model model) {
+        log.info("Creating a new LessonPlan.");
+        return newLessonPlanView(model);
     }
 
     @PostMapping("/lessonplans")
@@ -49,8 +64,8 @@ public class LessonPlanController {
         return lessonPlanView(lessonPlan.getId(), model);
     }
 
-    @DeleteMapping("/lessonplans/{lessonPlanId}")
-    public String deleteLessonPlan(@PathVariable("lessonPlanId") final Long lessonPlanId, final Model model) {
+    @GetMapping("/lessonplans/delete/{id}")
+    public String deleteLessonPlan(@PathVariable("id") final Long lessonPlanId, final Model model) {
         log.info("Deleting LessonPlan.");
         lessonPlanService.removeLessonPlan(lessonPlanId);
         return lessonPlansView(model);
@@ -59,7 +74,6 @@ public class LessonPlanController {
     private String lessonPlansView(final Model model) {
         final List<LessonPlan> lessonPlans = lessonPlanService.getAll();
         model.addAttribute("lessonPlans", lessonPlans);
-        model.addAttribute("lessonPlan", new LessonPlan());
         final Selection selection = new Selection();
         model.addAttribute("selection", selection);
         log.info("Returning lesson plans");
@@ -70,6 +84,17 @@ public class LessonPlanController {
         model.addAttribute("lessonPlan", lessonPlanService.getLessonPlan(lessonPlanId));
         log.info("Returning lesson plan id: {}", lessonPlanId);
         return "lessonplan"; //view
+    }
+
+    private String editLessonPlanView(final Long lessonPlanId, final Model model) {
+        model.addAttribute("lessonPlan", lessonPlanService.getLessonPlan(lessonPlanId));
+        log.info("Returning lesson plan id: {}", lessonPlanId);
+        return "editlessonplan"; //view
+    }
+
+    private String newLessonPlanView(final Model model) {
+        model.addAttribute("lessonPlan", new LessonPlan());
+        return "newlessonplan"; //view
     }
 
 }

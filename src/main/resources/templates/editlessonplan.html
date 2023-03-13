@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Ground School</title>
+
+    <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+
+<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">starfireaviation.com</a>
+</nav -->
+
+<!-- main role="main" class="container" -->
+    <a th:href="@{/}">home</a> | <a th:href="@{/lessonplans}">lesson plans</a> | <a th:href="@{/lessonplans/{id}(id=${lessonPlan.getId()})}" th:text="${lessonPlan.getTitle()}"></a>
+    <h1>Edit Lesson Plan</h1>
+<form id="updateLessonPlanForm"
+      th:action="@{/lessonplans}"
+      th:method="post"
+      th:object="${lessonPlan}">
+    ID:<br>
+    <input name="id" type="text" width="80" th:value="*{id}">
+    <br>
+    Title:<br>
+    <input name="title" type="text" width="80" th:value="*{title}">
+    <br>
+    Summary:<br>
+    <textarea name="summary" rows="4" cols="80" th:field="*{summary}"></textarea>
+    <br>
+    Objective:<br>
+    <textarea name="objective" rows="4" cols="80" th:field="*{objective}"></textarea>
+    <br>
+    Content:<br>
+    <textarea name="content" rows="4" cols="80" th:field="*{content}"></textarea>
+    <br>
+    Schedule:<br>
+    <textarea name="schedule" rows="4" cols="80" th:field="*{schedule}"></textarea>
+    <br>
+    Equipment:<br>
+    <textarea name="equipment" rows="4" cols="80" th:field="*{equipment}"></textarea>
+    <br>
+    Instructor Actions:<br>
+    <textarea name="instructorActions" rows="4" cols="80" th:field="*{instructorActions}"></textarea>
+    <br>
+    Student Actions:<br>
+    <textarea name="studentActions" rows="4" cols="80" th:field="*{studentActions}"></textarea>
+    <br>
+    Completion Standards:<br>
+    <textarea name="completionStandards" rows="4" cols="80" th:field="*{completionStandards}"></textarea>
+    <br>
+    Presentable:<br>
+    <input type="checkbox" th:value="${lessonPlan.isPresentable()}">
+    <br>
+    <input type="submit" value="Update">
+</form>
+<!-- /main -->
+<!-- /.container -->
+
+<!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
+</body>
+</html>

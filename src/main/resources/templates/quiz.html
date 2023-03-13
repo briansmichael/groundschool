@@ -6,17 +6,18 @@
 
     <title>Ground School</title>
 
-    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 
 <body>
 
+    <a th:href="@{/}">home</a> | <a th:href="@{/quizzes}">quizzes</a>
 <!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#">starfireaviation.com</a>
 </nav -->
 
-<main role="main" class="container">
+<!-- main role="main" class="container" -->
     <ol>
         <li th:each="question,state : ${quiz.getQuestions()}">
             <div th:remove="tag" th:utext="${question.getText()}"></div>
@@ -40,9 +41,9 @@
             </table>
         </li>
     </ol>
-</main>
+<!-- /main -->
 <!-- /.container -->
 
-<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+<!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
 </body>
 </html>
