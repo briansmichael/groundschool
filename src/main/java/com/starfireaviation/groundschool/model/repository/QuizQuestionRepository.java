@@ -10,5 +10,7 @@ public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long
 
     Optional<List<QuizQuestion>> findAllByQuizId(Long quizId);
 
+    Optional<List<QuizQuestion>> findAllByQuestionId(Long questionId);
+
     Optional<List<QuizQuestion>> findAllByQuizIdAndQuestionId(Long quizId, Long questionId);
 }

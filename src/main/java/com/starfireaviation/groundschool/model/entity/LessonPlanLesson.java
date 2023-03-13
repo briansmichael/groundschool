@@ -25,20 +25,14 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * Lesson.
+ * LessonPlanLesson.
  */
 @Entity
 @Data
-@Table(name = "lesson")
-public class Lesson implements Serializable {
-
-    /**
-     * Default SerialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
+@Table(name = "lesson_plan_lesson")
+public class LessonPlanLesson implements Serializable {
 
     /**
      * ID.
@@ -49,45 +43,15 @@ public class Lesson implements Serializable {
     private Long id;
 
     /**
-     * Created At.
+     * Lesson ID.
      */
-    @Column(name = "created_date")
-    private Date createdDate = new Date();
+    @Column(name = "lesson_id")
+    private Long lessonId;
 
     /**
-     * Updated At.
+     * LessonPlan ID.
      */
-    @Column(name = "updated_date")
-    private Date updatedDate = new Date();
-
-    /**
-     * Group.
-     */
-    @Column(name = "grp")
-    private String group;
-
-    /**
-     * Chapter.
-     */
-    @Column(name = "chapter")
-    private Long chapter;
-
-    /**
-     * Title.
-     */
-    @Column(name = "title")
-    private String title;
-
-    /**
-     * Text.
-     */
-    @Column(name = "text", length = Integer.MAX_VALUE)
-    private String text;
-
-    /**
-     * Required for course.
-     */
-    @Column(name = "required")
-    private boolean required;
+    @Column(name = "lesson_plan_id")
+    private Long lessonPlanId;
 
 }

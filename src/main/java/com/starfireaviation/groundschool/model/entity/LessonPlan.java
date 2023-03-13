@@ -22,6 +22,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -120,4 +121,10 @@ public class LessonPlan implements Serializable {
      */
     @Column(name = "presentable")
     private boolean presentable;
+
+    /**
+     * Lessons.
+     */
+    @Transient
+    private List<Lesson> lessons;
 }

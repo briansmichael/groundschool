@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ground School - Lessons</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+    <a th:href="@{/}">home</a> | <a th:href="@{/lessons/new}">New Lesson</a>
+    <h1>Lessons</h1>
+<ul>
+    <li th:each="lesson : ${lessons}">
+        <table th:border="0">
+            <tr>
+                <td>
+                    <a th:href="@{/lessons/{id}(id=${lesson.getId()})}" th:text="${lesson.getTitle()}"></a>
+                </td>
+                <td>
+                    <a th:href="@{/lessons/edit/{id}(id=${lesson.getId()})}">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/lessons/delete/{id}(id=${lesson.getId()})}">Delete</a>
+                </td>
+            </tr>
+        </table>
+    </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ground School - Lesson</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+    <a th:href="@{/}">home</a> | <a th:href="@{/lessons}">lessons</a> | <a th:href="@{/lessons/edit/{id}(id=${lesson.getId()})}">Edit</a>
+    <h1>Lesson</h1>
+<table border="1">
+    <tr>
+        <th>ID:</th>
+        <td><div th:text="${lesson.getId()}"></div></td>
+    </tr>
+    <tr>
+        <th>Title:</th>
+        <td><div th:remove="tag" th:utext="${lesson.getTitle()}"></div></td>
+    </tr>
+    <tr>
+        <th>Group:</th>
+        <td><div th:remove="tag" th:utext="${lesson.getGroup()}"></div></td>
+    </tr>
+    <tr>
+        <th>Chapter:</th>
+        <td><div th:remove="tag" th:utext="${lesson.getChapter()}"></div></td>
+    </tr>
+    <tr>
+        <th>Text:</th>
+        <td><div th:remove="tag" th:utext="${lesson.getText()}"></div></td>
+    </tr>
+    <tr>
+        <th>Required:</th>
+        <td><div th:text="${lesson.isRequired()}"/></td>
+    </tr>
+</table>
+</body>
+</html>

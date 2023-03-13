@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ground School - New Lesson</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+<a th:href="@{/}">home</a> | <a th:href="@{/lessons}">lessons</a> | <a th:href="@{/lessons/{id}(id=${lesson.getId()})}" th:text="${lesson.getTitle()}"></a>
+<h1>New Lesson</h1>
+<form id="createLessonForm"
+      th:action="@{/lessons}"
+      th:method="post"
+      th:object="${lesson}">
+    Title:<br>
+    <input name="title" type="text" width="80" th:value="*{title}">
+    <br>
+    Group:<br>
+    <input name="group" type=""text width="80" th:value="*{group}">
+    <br>
+    Chapter:<br>
+    <input name="chapter" type="text" width="80" th:value="*{chapter}">
+    <br>
+    Text:<br>
+    <textarea name="text" rows="4" cols="80" th:field="*{text}"></textarea>
+    <br>
+    <input type="submit" value="Create">
+</form>
+</body>
+</html>
