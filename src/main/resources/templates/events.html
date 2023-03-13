@@ -26,8 +26,8 @@
     </form>
     <p>Upcoming events:</p>
     <ul>
-        <li th:each="event : ${events}">
-            <div th:text="${event.getStartTime()}"></div><div th:text="${event.getTitle()}"></div>
+        <li th:each="event : ${events}" th:text="${event.getTitle()}">
+            <div th:text="${event.getStartTime()}"></div>
         </li>
     </ul>
 </main>

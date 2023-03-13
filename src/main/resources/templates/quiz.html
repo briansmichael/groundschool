@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Starfire Aviation Ground School</title>
+    <title>Ground School</title>
 
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
@@ -17,15 +17,8 @@
 </nav -->
 
 <main role="main" class="container">
-    <form id="getQuestionForm"
-          action="/quizzes"
-          method="get">
-        Quiz ID:
-        <input name="quizId" type="text" th:value="${selection.getQuizId()}">
-        <input type="submit" value="Search">
-    </form>
     <ol>
-        <li th:each="question,state : ${questions}">
+        <li th:each="question,state : ${quiz.getQuestions()}">
             <div th:remove="tag" th:utext="${question.getText()}"></div>
             <div th:if="${question.getImageIds()}">
                 <table>

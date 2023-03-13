@@ -65,6 +65,15 @@ public class QuizService extends BaseService {
         }
     }
 
+    public void removeQuiz(final Long quizId) {
+        quizQuestionRepository
+                .findAllByQuizId(quizId)
+                .ifPresent(quizQuestions -> quizQuestionRepository.deleteAll(quizQuestions));
+        quizRepository
+                .findById(quizId)
+                .ifPresent(quiz -> quizRepository.delete(quiz));
+    }
+
     public void removeQuizQuestion(final Long quizId, final Long questionId) {
         quizQuestionRepository
                 .findAllByQuizIdAndQuestionId(quizId, questionId)

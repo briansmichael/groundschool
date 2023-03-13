@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Ground School</title>
+
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+
+<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">starfireaviation.com</a>
+</nav -->
+
+<main role="main" class="container">
+    <form id="getQuizForm"
+          action="/quizzes"
+          method="post">
+        New Quiz:
+        <br>
+        Title: <input name="title" type="text">
+        <br>
+        Lesson Plan:
+        <select th:id="lessonPlanId"
+                th:name="lessonPlanId">
+            <option th:each="lessonPlan : ${lessonPlans}"
+                    th:value="${lessonPlan.getId()}"
+                    th:text="${lessonPlan.getTitle()}">
+            </option>
+        </select>
+        <br>
+        Quiz Type
+        <select th:id="quizType"
+                th:name="quizType">
+            <option th:each="state : ${T(com.starfireaviation.groundschool.model.enums.QuizType).values()}"
+                    th:value="${state}"
+                    th:text="${state}">
+            </option>
+        </select>
+        <br>
+        <input type="submit" value="Add">
+    </form>
+    <ul>
+        <li th:each="quiz : ${quizzes}"><a th:href="@{/quizzes(quizId=${quiz.getId()})}"
+                                           th:text="${quiz.getTitle()}"></a></li>
+    </ul></main>
+<!-- /.container -->
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>

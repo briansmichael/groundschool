@@ -21,6 +21,8 @@ import com.starfireaviation.groundschool.model.enums.NotificationType;
 import com.starfireaviation.groundschool.model.enums.Priority;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -33,7 +35,11 @@ import java.time.Instant;
 @Table(name = "message")
 public class Message implements Comparable<Message>, Serializable {
 
+    /**
+     * ID.
+     */
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 

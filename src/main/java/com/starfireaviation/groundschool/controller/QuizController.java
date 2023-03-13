@@ -1,9 +1,11 @@
 package com.starfireaviation.groundschool.controller;
 
+import com.starfireaviation.groundschool.model.entity.LessonPlan;
 import com.starfireaviation.groundschool.model.entity.Question;
 import com.starfireaviation.groundschool.model.entity.Quiz;
 import com.starfireaviation.groundschool.model.entity.QuizQuestion;
 import com.starfireaviation.groundschool.model.web.Selection;
+import com.starfireaviation.groundschool.service.LessonPlanService;
 import com.starfireaviation.groundschool.service.QuestionService;
 import com.starfireaviation.groundschool.service.QuizService;
 import jakarta.websocket.server.PathParam;
@@ -26,29 +28,31 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
+    @Autowired
+    private LessonPlanService lessonPlanService;
+
     @GetMapping("/quizzes")
     public String getQuiz(@PathParam("quizId") final Long quizId, final Model model) {
+        if (quizId == null) {
+            return quizzesView(model);
+        }
         try {
-            final List<Quiz> quizzes = quizService.getAll();
-            model.addAttribute("quizzes", quizzes);
-            final List<Question> questions = quizService.getQuestionsForQuiz(quizId);
-            model.addAttribute("questions", questions);
             return quizView(quizId, model);
         } catch (Exception e) {
-            return quizView(1L, model);
+            return quizzesView(model);
         }
     }
 
     @PostMapping("/quizzes")
     public String createQuiz(final Quiz quiz, final Model model) {
-        final Quiz savedQuiz = quizService.createOrUpdate(quiz);
-        return quizView(savedQuiz.getId(), model);
+        quizService.createOrUpdate(quiz);
+        return quizzesView(model);
     }
 
     @PutMapping("/quizzes")
     public String updateQuiz(final Quiz quiz, final Model model) {
-        final Quiz savedQuiz = quizService.createOrUpdate(quiz);
-        return quizView(savedQuiz.getId(), model);
+        quizService.createOrUpdate(quiz);
+        return quizzesView(model);
     }
 
     @PostMapping("/quizzes/{quizId}/{questionId}")
@@ -67,13 +71,27 @@ public class QuizController {
         return quizView(quizId, model);
     }
 
-    private String quizView(final Long quizId, final Model model) {
+    @DeleteMapping("/quizzes/{quizId}")
+    public String deleteQuestion(@PathVariable("quizId") final Long quizId,
+                                 final Model model) {
+        quizService.removeQuiz(quizId);
+        return quizzesView(model);
+    }
+
+    private String quizzesView(final Model model) {
+        final List<LessonPlan> lessonPlans = lessonPlanService.getAll();
+        model.addAttribute("lessonPlans", lessonPlans);
         final List<Quiz> quizzes = quizService.getAll();
         model.addAttribute("quizzes", quizzes);
-        model.addAttribute("quiz", quizService.getQuiz(quizId));
         final Selection selection = new Selection();
-        selection.setQuizId(quizId);
         model.addAttribute("selection", selection);
+        log.info("Returning quizzes");
+        return "quizzes"; //view
+    }
+
+    private String quizView(final Long quizId, final Model model) {
+        model.addAttribute("quiz", quizService.getQuiz(quizId));
+        log.info("Returning quiz id: {}", quizId);
         return "quiz"; //view
     }
 

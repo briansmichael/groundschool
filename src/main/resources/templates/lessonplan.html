@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Ground School</title>
+
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+
+<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">starfireaviation.com</a>
+</nav -->
+
+<main role="main" class="container">
+    <h1>Lesson Plan</h1>
+    <table>
+        <tr>
+            <td>
+                <table border="1">
+                    <tr>
+                        <th>ID:</th>
+                        <td><div th:text="${lessonPlan.getId()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Title:</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getTitle()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Summary:</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getSummary()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Objective:</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getObjective()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Content:</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getContent()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Schedule:</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getSchedule()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Equipment:</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getEquipment()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Instructor Actions:</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getInstructorActions()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Student Actions</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getStudentActions()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Completion Standards:</th>
+                        <td><div th:remove="tag" th:utext="${lessonPlan.getCompletionStandards()}"></div></td>
+                    </tr>
+                    <tr>
+                        <th>Presentable:</th>
+                        <td><div th:text="${lessonPlan.isPresentable()}"/></td>
+                    </tr>
+                </table>
+            </td>
+            <td valign="top">
+                <form id="updateLessonPlanForm"
+                      th:action="@{/lessonplans}"
+                      th:method="put"
+                      th:object="${lessonPlan}">
+                    ID:<br>
+                    <input name="id" type="text" width="80" th:value="*{id}">
+                    <br>
+                    Title:<br>
+                    <input name="title" type="text" width="80" th:value="*{title}">
+                    <br>
+                    Summary:<br>
+                    <textarea name="summary" rows="4" cols="80" th:field="*{summary}"></textarea>
+                    <br>
+                    Objective:<br>
+                    <textarea name="objective" rows="4" cols="80" th:field="*{objective}"></textarea>
+                    <br>
+                    Content:<br>
+                    <textarea name="content" rows="4" cols="80" th:field="*{content}"></textarea>
+                    <br>
+                    Schedule:<br>
+                    <textarea name="schedule" rows="4" cols="80" th:field="*{schedule}"></textarea>
+                    <br>
+                    Equipment:<br>
+                    <textarea name="equipment" rows="4" cols="80" th:field="*{equipment}"></textarea>
+                    <br>
+                    Instructor Actions:<br>
+                    <textarea name="instructorActions" rows="4" cols="80" th:field="*{instructorActions}"></textarea>
+                    <br>
+                    Student Actions:<br>
+                    <textarea name="studentActions" rows="4" cols="80" th:field="*{studentActions}"></textarea>
+                    <br>
+                    Completion Standards:<br>
+                    <textarea name="completionStandards" rows="4" cols="80" th:field="*{completionStandards}"></textarea>
+                    <br>
+                    Presentable:<br>
+                    <input type="checkbox" th:value="${lessonPlan.isPresentable()}">
+                    <br>
+                    <input type="submit" value="Update">
+                </form>
+            </td>
+        </tr>
+    </table>
+</main>
+<!-- /.container -->
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>

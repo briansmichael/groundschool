@@ -18,6 +18,8 @@ package com.starfireaviation.groundschool.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -43,6 +45,7 @@ public class LessonPlan implements Serializable {
      * ID.
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 
@@ -61,55 +64,55 @@ public class LessonPlan implements Serializable {
     /**
      * Title.
      */
-    @Column(name = "title")
+    @Column(name = "title", length = Integer.MAX_VALUE)
     private String title;
 
     /**
      * Summary.
      */
-    @Column(name = "summary")
+    @Column(name = "summary", length = Integer.MAX_VALUE)
     private String summary;
 
     /**
      * Objective.
      */
-    @Column(name = "objective")
+    @Column(name = "objective", length = Integer.MAX_VALUE)
     private String objective;
 
     /**
      * Content.
      */
-    @Column(name = "content")
+    @Column(name = "content", length = Integer.MAX_VALUE)
     private String content;
 
     /**
      * Schedule.
      */
-    @Column(name = "schedule")
+    @Column(name = "schedule", length = Integer.MAX_VALUE)
     private String schedule;
 
     /**
      * Equipment.
      */
-    @Column(name = "equipment")
+    @Column(name = "equipment", length = Integer.MAX_VALUE)
     private String equipment;
 
     /**
      * Instructor's Actions.
      */
-    @Column(name = "instructor_actions")
+    @Column(name = "instructor_actions", length = Integer.MAX_VALUE)
     private String instructorActions;
 
     /**
      * Student's Actions.
      */
-    @Column(name = "student_actions")
+    @Column(name = "student_actions", length = Integer.MAX_VALUE)
     private String studentActions;
 
     /**
      * Completion Standards.
      */
-    @Column(name = "completion_standards")
+    @Column(name = "completion_standards", length = Integer.MAX_VALUE)
     private String completionStandards;
 
     /**
