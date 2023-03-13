@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Ground School - Event</title>
+
+    <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+<a th:href="@{/}">home</a> | <a th:href="@{/events}">events</a> | <a th:href="@{/events/edit/{id}(id=${event.getId()})}">Edit</a>
+    <h1>Event</h1>
+<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">starfireaviation.com</a>
+</nav -->
+
+<!-- main role="main" class="container" -->
+<!-- /main -->
+    <table border="1">
+        <tr>
+            <th>ID:</th>
+            <td><div th:text="${event.getId()}"></div></td>
+        </tr>
+        <tr>
+            <th>Title:</th>
+            <td><div th:remove="tag" th:utext="${event.getTitle()}"></div></td>
+        </tr>
+        <tr>
+            <th>Start Time:</th>
+            <td><div th:remove="tag" th:utext="${event.getStartTime()}"></div></td>
+        </tr>
+        <tr>
+            <th>Calendar URL:</th>
+            <td><div th:remove="tag" th:utext="${event.getCalendarUrl()}"></div></td>
+        </tr>
+        <tr>
+            <th>Checkin Code:</th>
+            <td><div th:remove="tag" th:utext="${event.getCheckinCode()}"></div></td>
+        </tr>
+        <tr>
+            <th>Completed Time:</th>
+            <td><div th:remove="tag" th:utext="${event.getCompletedTime()}"></div></td>
+        </tr>
+        <tr>
+            <th>Event Type:</th>
+            <td><div th:remove="tag" th:utext="${event.getEventType()}"></div></td>
+        </tr>
+        <tr>
+            <th>Lead Instructor:</th>
+            <td><div th:remove="tag" th:utext="${event.getLead()}"></div></td>
+        </tr>
+        <tr>
+            <th>Lesson Plan ID:</th>
+            <td><div th:remove="tag" th:utext="${event.getLessonPlanId()}"></div></td>
+        </tr>
+    </table>
+<!-- /.container -->
+
+<!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
+</body>
+</html>

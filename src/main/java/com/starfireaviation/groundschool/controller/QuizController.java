@@ -1,14 +1,10 @@
 package com.starfireaviation.groundschool.controller;
 
 import com.starfireaviation.groundschool.model.entity.LessonPlan;
-import com.starfireaviation.groundschool.model.entity.Question;
 import com.starfireaviation.groundschool.model.entity.Quiz;
-import com.starfireaviation.groundschool.model.entity.QuizQuestion;
 import com.starfireaviation.groundschool.model.web.Selection;
 import com.starfireaviation.groundschool.service.LessonPlanService;
-import com.starfireaviation.groundschool.service.QuestionService;
 import com.starfireaviation.groundschool.service.QuizService;
-import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,15 +28,30 @@ public class QuizController {
     private LessonPlanService lessonPlanService;
 
     @GetMapping("/quizzes")
-    public String getQuiz(@PathParam("quizId") final Long quizId, final Model model) {
-        if (quizId == null) {
-            return quizzesView(model);
-        }
-        try {
-            return quizView(quizId, model);
-        } catch (Exception e) {
-            return quizzesView(model);
-        }
+    public String getQuizzes(final Model model) {
+        return quizzesView(model);
+    }
+
+    @GetMapping("/quizzes/{id}")
+    public String getQuiz(@PathVariable("id") final Long quizId, final Model model) {
+        return quizView(quizId, model);
+    }
+
+    @GetMapping("/quizzes/edit/{id}")
+    public String editQuiz(@PathVariable("id") final Long quizId, final Model model) {
+        log.info("Editing Quiz.");
+        model.addAttribute("quiz", quizService.getQuiz(quizId));
+        model.addAttribute("lessonPlans", lessonPlanService.getAll());
+        log.info("Returning quiz id: {}", quizId);
+        return "editquiz"; //view
+    }
+
+    @GetMapping("/quizzes/new")
+    public String newQuiz(final Model model) {
+        log.info("Creating a new Quiz.");
+        model.addAttribute("quiz", new Quiz());
+        model.addAttribute("lessonPlans", lessonPlanService.getAll());
+        return "newquiz"; //view
     }
 
     @PostMapping("/quizzes")
@@ -90,8 +101,8 @@ public class QuizController {
     }
 
     private String quizView(final Long quizId, final Model model) {
+        model.addAttribute("lessonPlans", lessonPlanService.getAll());
         model.addAttribute("quiz", quizService.getQuiz(quizId));
-        log.info("Returning quiz id: {}", quizId);
         return "quiz"; //view
     }
 

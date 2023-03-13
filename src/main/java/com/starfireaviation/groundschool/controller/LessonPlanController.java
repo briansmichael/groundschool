@@ -1,7 +1,6 @@
 package com.starfireaviation.groundschool.controller;
 
 import com.starfireaviation.groundschool.model.entity.LessonPlan;
-import com.starfireaviation.groundschool.model.web.Selection;
 import com.starfireaviation.groundschool.service.LessonPlanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +40,16 @@ public class LessonPlanController {
     @GetMapping("/lessonplans/edit/{id}")
     public String editLessonPlan(@PathVariable("id") final Long lessonPlanId, final Model model) {
         log.info("Editing LessonPlan.");
-        return editLessonPlanView(lessonPlanId, model);
+        model.addAttribute("lessonPlan", lessonPlanService.getLessonPlan(lessonPlanId));
+        log.info("Returning lesson plan id: {}", lessonPlanId);
+        return "editlessonplan"; //view
     }
 
     @GetMapping("/lessonplans/new")
     public String newLessonPlan(final Model model) {
         log.info("Creating a new LessonPlan.");
-        return newLessonPlanView(model);
+        model.addAttribute("lessonPlan", new LessonPlan());
+        return "newlessonplan"; //view
     }
 
     @PostMapping("/lessonplans")
@@ -74,8 +76,6 @@ public class LessonPlanController {
     private String lessonPlansView(final Model model) {
         final List<LessonPlan> lessonPlans = lessonPlanService.getAll();
         model.addAttribute("lessonPlans", lessonPlans);
-        final Selection selection = new Selection();
-        model.addAttribute("selection", selection);
         log.info("Returning lesson plans");
         return "lessonplans"; //view
     }
@@ -84,17 +84,6 @@ public class LessonPlanController {
         model.addAttribute("lessonPlan", lessonPlanService.getLessonPlan(lessonPlanId));
         log.info("Returning lesson plan id: {}", lessonPlanId);
         return "lessonplan"; //view
-    }
-
-    private String editLessonPlanView(final Long lessonPlanId, final Model model) {
-        model.addAttribute("lessonPlan", lessonPlanService.getLessonPlan(lessonPlanId));
-        log.info("Returning lesson plan id: {}", lessonPlanId);
-        return "editlessonplan"; //view
-    }
-
-    private String newLessonPlanView(final Model model) {
-        model.addAttribute("lessonPlan", new LessonPlan());
-        return "newlessonplan"; //view
     }
 
 }

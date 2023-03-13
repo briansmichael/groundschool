@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -27,12 +28,35 @@ public class EventsController {
     }
 
     @GetMapping("/events")
-    public String getEvent(@PathParam("eventId") final Long eventId, final Model model) {
-        try {
-            return eventView(eventId, model);
-        } catch (Exception e) {
-            return eventView(1L, model);
-        }
+    public String getEvents(final Model model) {
+        return defaultView(model);
+    }
+
+    @GetMapping("/events/{id}")
+    public String getEvents(@PathVariable("id") final Long eventId, final Model model) {
+        return eventView(eventId, model);
+    }
+
+    @GetMapping("/events/edit/{id}")
+    public String editEvent(@PathVariable("id") final Long eventId, final Model model) {
+        log.info("Editing Event.");
+        model.addAttribute("event", eventService.getEvent(eventId));
+        log.info("Returning event id: {}", eventId);
+        return "editevent"; //view
+    }
+
+    @GetMapping("/events/delete/{id}")
+    public String deleteEvent(@PathVariable("id") final Long eventId, final Model model) {
+        log.info("Deleting Event.");
+        eventService.removeEvent(eventId);
+        return defaultView(model);
+    }
+
+    @GetMapping("/events/new")
+    public String newEvent(final Model model) {
+        log.info("Creating a new Event.");
+        model.addAttribute("event", new Event());
+        return "newevent"; //view
     }
 
     @PostMapping("/events")
@@ -48,17 +72,14 @@ public class EventsController {
     }
 
     private String defaultView(final Model model) {
-        return eventView(1L, model);
+        final List<Event> events = eventService.getUpcoming();
+        model.addAttribute("events", events);
+        return "events";
     }
 
     private String eventView(final Long eventId, final Model model) {
-        final List<Event> events = eventService.getUpcoming();
-        model.addAttribute("events", events);
         model.addAttribute("event", eventService.getEvent(eventId));
-        final Selection selection = new Selection();
-        selection.setEventId(eventId);
-        model.addAttribute("selection", selection);
-        return "events"; //view
+        return "event"; //view
     }
 
 }

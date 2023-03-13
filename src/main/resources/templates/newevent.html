@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Ground School - New Event</title>
+
+    <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+<a th:href="@{/}">home</a> | <a th:href="@{/events}">events</a> | <a th:href="@{/events/{id}(id=${event.getId()})}" th:text="${event.getTitle()}"></a>
+<h1>New Event</h1>
+<form id="createEventForm"
+      th:action="@{/events}"
+      th:method="post"
+      th:object="${event}">
+    Title:<br>
+    <input name="title" type="text" width="80" th:value="*{title}">
+    <br>
+    Start Time:<br>
+    <input name="startTime" type=""text width="80" th:value="*{startTime}"></input>
+    <br>
+    Calendar URL:<br>
+    <input name="calendarUrl" type="text" width="80" th:value="*{calendarUrl}"></input>
+    <br>
+    Checkin Code:<br>
+    <input name="checkinCode" type="text" width="80" th:value="*{checkinCode}"></input>
+    <br>
+    Completed Time:<br>
+    <input name="completedTime" type="text" width="80" th:value="*{completedTime}"></input>
+    <br>
+    Event Type:<br>
+    <input name="eventType" type="text" width="80" th:value="*{eventType}"></input>
+    <br>
+    Lead Instructor:<br>
+    <input name="lead" type="text" width="80" th:value="*{lead}"></input>
+    <br>
+    Lesson Plan ID:<br>
+    <input name="lessonPlanId" type="text" width="80" th:value="*{lessonPlanId}"></input>
+    <br>
+    <input type="submit" value="Create">
+</form>
+<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">starfireaviation.com</a>
+</nav -->
+
+<!-- main role="main" class="container" -->
+<!-- /main -->
+<!-- /.container -->
+
+<!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Ground School - Edit Quiz</title>
+
+    <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+<a th:href="@{/}">home</a> | <a th:href="@{/quizzes}">quizzes</a> | <a th:href="@{/quizzes/{id}(id=${quiz.getId()})}" th:text="${quiz.getTitle()}"></a>
+<h1>Edit Quiz</h1>
+<form id="updateQuizForm"
+      th:action="@{/quizzes}"
+      th:method="post"
+      th:object="${quiz}">
+    ID:<br>
+    <input name="id" type="text" width="80" th:value="*{id}">
+    <br>
+    Title:<br>
+    <input name="title" type="text" width="80" th:value="*{title}">
+    <br>
+    Quiz Type:<br>
+    <select name="quizType">
+        <option th:each="type : ${T(com.starfireaviation.groundschool.model.enums.QuizType).values()}"
+                th:value="${type}"
+                th:text="${type}"
+                th:selected="${quiz.getQuizType()}==${type}">
+        </option>
+    </select>
+    <br>
+    Lesson Plan ID:<br>
+    <select th:id="lessonPlanId"
+            th:name="lessonPlanId">
+        <option th:each="lessonPlan : ${lessonPlans}"
+                th:value="${lessonPlan.getId()}"
+                th:text="${lessonPlan.getTitle()}"
+                th:selected="${quiz.getLessonPlanId()}==${lessonPlan.getId()}">
+        </option>
+    </select>
+    <input name="lessonPlanId" type="text" width="80" th:value="*{lessonPlanId}"></input>
+    <br>
+    <input type="submit" value="Update">
+</form>
+<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">starfireaviation.com</a>
+</nav -->
+
+<!-- main role="main" class="container" -->
+    <
+<!-- /main -->
+<!-- /.container -->
+
+<!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
+</body>
+</html>

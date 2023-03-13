@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Ground School</title>
+    <title>Ground School - Upcoming Events</title>
 
     <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
@@ -15,22 +15,19 @@
 <!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#">starfireaviation.com</a>
 </nav -->
-
-<main role="main" class="container">
-    <form id="getQuestionForm"
-          action="/events"
-          method="get">
-        Event ID:
-        <input name="eventId" type="text" th:value="${selection.getEventId()}">
-        <input type="submit" value="Search">
-    </form>
-    <p>Upcoming events:</p>
+<a th:href="@{/}">home</a> | <a th:href="@{/questions}">questions</a> |
+<a th:href="@{/lessonplans}">lesson plans</a> | <a th:href="@{/quizzes}">quizzes</a> |
+<a th:href="@{/events/new}">New Event</a>
+<!-- main role="main" class="container" -->
+    <p>Upcoming Ground School Sessions:</p>
     <ul>
-        <li th:each="event : ${events}" th:text="${event.getTitle()}">
-            <div th:text="${event.getStartTime()}"></div>
+        <li th:each="event : ${events}">
+            <a th:href="@{/events/{id}(id=${event.getId()})}" th:text="${event.getTitle()}"></a>
+            <br>
+            <div th:text="${#temporals.format(event.getStartTime(), 'EEE MMM dd, yyyy HH:mm a')}"></div>
         </li>
     </ul>
-</main>
+<!-- /main -->
 <!-- /.container -->
 
 <!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
