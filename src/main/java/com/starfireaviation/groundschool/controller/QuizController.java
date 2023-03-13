@@ -37,6 +37,11 @@ public class QuizController {
         return quizView(quizId, model);
     }
 
+    @GetMapping("/quizzes/{id}/review")
+    public String reviewQuiz(@PathVariable("id") final Long quizId, final Model model) {
+        return reviewQuizView(quizId, model);
+    }
+
     @GetMapping("/quizzes/edit/{id}")
     public String editQuiz(@PathVariable("id") final Long quizId, final Model model) {
         log.info("Editing Quiz.");
@@ -60,6 +65,12 @@ public class QuizController {
         return quizzesView(model);
     }
 
+    @PostMapping("/quizzes/submit")
+    public String submitQuiz(final Quiz quiz, final Model model) {
+        quizService.submitQuiz(quiz);
+        return reviewQuizView(quiz.getId(), model);
+    }
+
     @PutMapping("/quizzes")
     public String updateQuiz(final Quiz quiz, final Model model) {
         quizService.createOrUpdate(quiz);
@@ -68,18 +79,18 @@ public class QuizController {
 
     @PostMapping("/quizzes/{quizId}/{questionId}")
     public String addQuestion(@PathVariable("quizId") final Long quizId,
-                              @PathVariable("questionId") final Long questionId,
-                              final Model model) {
+                            @PathVariable("questionId") final Long questionId) {
+        log.info("Adding Question ID: {} to Quiz ID: {}", questionId, quizId);
         quizService.addQuizQuestion(quizId, questionId);
-        return quizView(quizId, model);
+        return "success";
     }
 
     @DeleteMapping("/quizzes/{quizId}/{questionId}")
     public String deleteQuestion(@PathVariable("quizId") final Long quizId,
-                                 @PathVariable("questionId") final Long questionId,
-                                 final Model model) {
+                               @PathVariable("questionId") final Long questionId) {
+        log.info("Removing Question ID: {} from Quiz ID: {}", questionId, quizId);
         quizService.removeQuizQuestion(quizId, questionId);
-        return quizView(quizId, model);
+        return "success";
     }
 
     @DeleteMapping("/quizzes/{quizId}")
@@ -101,6 +112,12 @@ public class QuizController {
     }
 
     private String quizView(final Long quizId, final Model model) {
+        model.addAttribute("lessonPlans", lessonPlanService.getAll());
+        model.addAttribute("quiz", quizService.getQuiz(quizId));
+        return "quiz"; //view
+    }
+
+    private String reviewQuizView(final Long quizId, final Model model) {
         model.addAttribute("lessonPlans", lessonPlanService.getAll());
         model.addAttribute("quiz", quizService.getQuiz(quizId));
         return "quiz"; //view

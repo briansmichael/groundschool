@@ -80,4 +80,10 @@ public class Quiz implements Serializable {
      */
     @Transient
     private LessonPlan lessonPlan;
+
+    /**
+     * Quiz taker's email address.
+     */
+    @Transient
+    private String emailAddress;
 }

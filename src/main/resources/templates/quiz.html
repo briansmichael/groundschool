@@ -3,47 +3,38 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>Ground School - Quiz</title>
-
-    <!-- link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/ -->
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 
 <body>
-
-    <a th:href="@{/}">home</a> | <a th:href="@{/quizzes}">quizzes</a>
-<!-- nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">starfireaviation.com</a>
-</nav -->
-
-<!-- main role="main" class="container" -->
-    <ol>
-        <li th:each="question,state : ${quiz.getQuestions()}">
-            <div th:remove="tag" th:utext="${question.getText()}"></div>
-            <div th:if="${question.getImageIds()}">
-                <table>
-                    <tr th:each="image: ${question.getImageIds()}">
-                        <td><img th:src="@{${'/images/' + image}}"/></td>
-                        <!-- td><img th:src="@{${'http://groundschool.starfireaviation.com:8080/images/' + image}}"/></td -->
-                        <!-- td><img th:src="@{${'http://localhost:8080/images/' + image}}"/></td -->
+<form id="takeQuizForm"
+      th:action="@{/quizzes/submit}"
+      th:method="post"
+      th:object="${quiz}">
+        <input type="hidden" th:field="*{id}">
+        Email Address:
+        <input type="text" width="80" th:field="*{emailAddress}"><br>
+        <ol>
+            <li th:each="question,state : ${quiz.getQuestions()}">
+                <div th:remove="tag" th:utext="${question.getText()}"></div>
+                <div th:if="${question.getImageIds()}">
+                    <table>
+                        <tr th:each="image: ${question.getImageIds()}">
+                            <td><img th:src="@{${'/images/' + image}}"/></td>
+                        </tr>
+                    </table>
+                </div>
+                <table th:border="0" th:style="'margin-left:30px'">
+                    <tr th:each="answer : ${question.getAnswers()}">
+                        <td><input type="radio" th:field="*{id}" th:value="*{id}"></td>
+                        <td th:text="${answer.getChoice() + ':'}"></td>
+                        <td th:text="${answer.getText()}"></td>
                     </tr>
                 </table>
-            </div>
-            <table th:border="0" th:style="'margin-left:30px'">
-                <tr th:each="answer : ${question.getAnswers()}">
-                    <td th:id="${answer.getCorrect() ? 'correctAnswerChoice' : 'incorrectAnswerChoice'}"
-                        th:text="${answer.getChoice() + ':'}"></td>
-                    <!-- th:style="${answer.getCorrect() ? 'color: green;' : 'color: black;'}" -->
-                    <td th:id="${answer.getCorrect() ? 'correctAnswerText' : 'incorrectAnswerText'}"
-                        th:text="${answer.getText()}"></td>
-                </tr>
-            </table>
-        </li>
-    </ol>
-<!-- /main -->
-<!-- /.container -->
-
-<!-- script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script -->
+                <p></p>
+            </li>
+        </ol>
+    </form>
 </body>
 </html>
