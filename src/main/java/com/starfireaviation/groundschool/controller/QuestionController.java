@@ -1,13 +1,10 @@
 package com.starfireaviation.groundschool.controller;
 
-import com.starfireaviation.groundschool.model.entity.Answer;
 import com.starfireaviation.groundschool.model.entity.Chapter;
 import com.starfireaviation.groundschool.model.entity.Question;
 import com.starfireaviation.groundschool.model.web.Selection;
-import com.starfireaviation.groundschool.service.AnswerService;
 import com.starfireaviation.groundschool.service.ChapterService;
 import com.starfireaviation.groundschool.service.GroupService;
-import com.starfireaviation.groundschool.service.QuestionRefImageService;
 import com.starfireaviation.groundschool.service.QuestionService;
 import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
@@ -16,14 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -37,12 +32,6 @@ public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private QuestionRefImageService questionRefImageService;
-
-    @Autowired
-    private AnswerService answerService;
 
     @GetMapping("/questions")
     public String getQuestion(@PathParam("questionId") final Long questionId, final Model model) {

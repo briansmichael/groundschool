@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,22 @@ public class LessonPlanController {
         log.info("Creating a new LessonPlan.");
         model.addAttribute("lessonPlan", new LessonPlan());
         return "newlessonplan"; //view
+    }
+
+    @PostMapping("/lessonplans/{lessonPlanId}/{lessonId}")
+    public String addLesson(@PathVariable("lessonPlanId") final Long lessonPlanId,
+                            @PathVariable("lessonId") final Long lessonId) {
+        log.info("Adding Lesson ID: {} to Lesson Plan ID: {}", lessonId, lessonPlanId);
+        lessonPlanService.addLessonPlanLesson(lessonPlanId, lessonId);
+        return "success";
+    }
+
+    @DeleteMapping("/lessonplans/{lessonPlanId}/{lessonId}")
+    public String deleteLesson(@PathVariable("lessonPlanId") final Long lessonPlanId,
+                               @PathVariable("lessonId") final Long lessonId) {
+        log.info("Removing Lesson ID: {} from Lesson Plan ID: {}", lessonId, lessonPlanId);
+        lessonPlanService.removeLessonPlanLesson(lessonPlanId, lessonId);
+        return "success";
     }
 
     @PostMapping("/lessonplans")

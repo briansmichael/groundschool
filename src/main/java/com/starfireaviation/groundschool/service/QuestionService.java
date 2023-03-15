@@ -38,7 +38,6 @@ public class QuestionService extends BaseService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    @Async
     public void update() {
         initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
         final String query = "SELECT QuestionID, QuestionText, ChapterID, SMCID, SourceID, LastMod, Explanation, "
@@ -72,6 +71,10 @@ public class QuestionService extends BaseService {
         return questionRepository.findAllByChapterId(chapterId).orElse(null);
     }
 
+    public List<Long> getAllQuestionIds() {
+        return questionRepository.findAll().stream().map(Question::getQuestionId).collect(Collectors.toList());
+    }
+
     public Question getQuestion(final Long questionId) {
         final Question question = questionRepository.findById(questionId).orElse(null);
         if (question != null) {
@@ -93,7 +96,7 @@ public class QuestionService extends BaseService {
             final String group = matcher.group(1);
             //log.info("Found pattern match: {}", group);
             final String replacementText = returnText.toString().replaceAll("\\{\\{IMAGE"+group+"}}",
-                    "<IMG SRC=\"http://groundschool.starfireaviation.com:8080/images/"+group+"\">");
+                    "<IMG SRC=\"/images/"+group+"\">");
             returnText.replace(0, returnText.length(), replacementText);
         }
         return returnText.toString();

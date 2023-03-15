@@ -10,7 +10,43 @@
 <body>
     <a th:href="@{/}">home</a> | <a th:href="@{/lessons/new}">New Lesson</a>
     <h1>Lessons</h1>
-<ul>
+    <form id="selectionForm"
+          action="/lessons/filter"
+          method="post">
+        Groups:
+        <select th:id="groups"
+                th:name="groups"
+                onchange="changeGroup()">
+            <option th:each="group : ${groups.entrySet()}"
+                    th:value="${group.getKey()}"
+                    th:text="${group.getValue()}"
+                    th:selected="${selection.getGroupId()} == ${group.getKey()}">
+            </option>
+        </select>
+        <input type="hidden"
+               id="groupId"
+               name="groupId"
+               th:value="${selection.getGroupId()}">
+        <br>
+        Chapters:
+        <select th:id="chapters"
+                th:name="chapters"
+                onchange="changeChapter()">
+            <option th:each="chapter : ${chapters.entrySet()}"
+                    th:value="${chapter.getKey()}"
+                    th:text="${chapter.getValue()}"
+                    th:selected="${selection.getChapterId()} == ${chapter.getKey()}">
+            </option>
+        </select>
+        <input type="hidden"
+               id="chapterId"
+               name="chapterId"
+               th:value="${selection.getChapterId()}">
+    </form>
+        <br>
+        <hr>
+        <hr>
+    <ul>
     <li th:each="lesson : ${lessons}">
         <table th:border="0">
             <tr>
@@ -27,5 +63,15 @@
         </table>
     </li>
 </ul>
+    <script type="text/javascript">
+        function changeGroup() {
+            document.getElementById("groupId").value = document.getElementById("groups").value;
+            document.getElementById("selectionForm").submit();
+        }
+        function changeChapter() {
+            document.getElementById("chapterId").value = document.getElementById("chapters").value;
+            document.getElementById("selectionForm").submit();
+        }
+    </script>
 </body>
 </html>

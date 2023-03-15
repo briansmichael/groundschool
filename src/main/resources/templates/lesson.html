@@ -20,12 +20,16 @@
         <td><div th:remove="tag" th:utext="${lesson.getTitle()}"></div></td>
     </tr>
     <tr>
-        <th>Group:</th>
-        <td><div th:remove="tag" th:utext="${lesson.getGroup()}"></div></td>
+        <th>Group ID:</th>
+        <td><div th:remove="tag" th:utext="${lesson.getGroupId()}"></div></td>
     </tr>
     <tr>
-        <th>Chapter:</th>
-        <td><div th:remove="tag" th:utext="${lesson.getChapter()}"></div></td>
+        <th>Chapter ID:</th>
+        <td><div th:remove="tag" th:utext="${lesson.getChapterId()}"></div></td>
+    </tr>
+    <tr>
+        <th>Reference ID:</th>
+        <td><div th:remove="tag" th:utext="${lesson.getReferenceId()}"></div></td>
     </tr>
     <tr>
         <th>Text:</th>

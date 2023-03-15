@@ -7,6 +7,7 @@ import com.starfireaviation.groundschool.service.ChapterService;
 import com.starfireaviation.groundschool.service.FigureSectionService;
 import com.starfireaviation.groundschool.service.GroupService;
 import com.starfireaviation.groundschool.service.ImageService;
+import com.starfireaviation.groundschool.service.LessonService;
 import com.starfireaviation.groundschool.service.LibraryService;
 import com.starfireaviation.groundschool.service.QuestionACSService;
 import com.starfireaviation.groundschool.service.QuestionRefImageService;
@@ -48,6 +49,9 @@ public class UpdateController {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private LessonService lessonService;
 
     @Autowired
     private LibraryService libraryService;
@@ -96,12 +100,13 @@ public class UpdateController {
         questionACSService.update();
         questionReferenceService.update();
         questionRefImageService.update();
-        questionService.update();
         questionTestService.update();
         refService.update();
         sourceService.update();
         subjectMatterCodeService.update();
         testService.update();
         textConstService.update();
+        questionService.update();
+        lessonService.update();
     }
 }

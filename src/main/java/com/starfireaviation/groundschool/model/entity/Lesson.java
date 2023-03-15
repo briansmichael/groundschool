@@ -64,13 +64,19 @@ public class Lesson implements Serializable {
      * Group.
      */
     @Column(name = "grp")
-    private String group;
+    private Long groupId;
 
     /**
      * Chapter.
      */
     @Column(name = "chapter")
-    private Long chapter;
+    private Long chapterId;
+
+    /**
+     * ReferenceId.
+     */
+    @Column(name = "reference_id")
+    private Long referenceId;
 
     /**
      * Title.
