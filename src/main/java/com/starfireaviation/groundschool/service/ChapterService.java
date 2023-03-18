@@ -12,7 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -66,5 +68,13 @@ public class ChapterService extends BaseService {
                 .filter(chapter -> groupId == chapter.getGroupId())
                 .forEach(chapter -> map.put(chapter.getChapterId(), chapter.getChapterName()));
         return map;
+    }
+
+    public List<Long> getAllChapterIDs() {
+        return chapterRepository
+                .findAll()
+                .stream()
+                .map(Chapter::getChapterId)
+                .collect(Collectors.toList());
     }
 }

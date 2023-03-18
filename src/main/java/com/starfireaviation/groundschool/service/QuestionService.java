@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,8 +72,13 @@ public class QuestionService extends BaseService {
         return questionRepository.findAllByChapterId(chapterId).orElse(null);
     }
 
-    public List<Long> getAllQuestionIds() {
-        return questionRepository.findAll().stream().map(Question::getQuestionId).collect(Collectors.toList());
+    public List<Long> getQuestionIDsForChapter(final Long chapterId) {
+        return questionRepository
+                .findAllByChapterId(chapterId)
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(Question::getQuestionId)
+                .collect(Collectors.toList());
     }
 
     public Question getQuestion(final Long questionId) {

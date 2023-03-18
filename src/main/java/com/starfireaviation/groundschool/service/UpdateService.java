@@ -1,5 +1,6 @@
 package com.starfireaviation.groundschool.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -67,6 +68,7 @@ public class UpdateService {
     private TextConstService textConstService;
 
     @Scheduled(cron = "0 0 10 2,11,21 * ?")
+    @PostConstruct
     public void updateAll() {
         acsService.update();
         answerService.update();

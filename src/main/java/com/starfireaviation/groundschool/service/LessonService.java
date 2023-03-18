@@ -52,7 +52,8 @@ public class LessonService extends BaseService {
 
     public void update() {
         log.info("Updating Lesson info...");
-        questionService.getAllQuestionIds().forEach(questionId -> {
+        chapterService.getAllChapterIDs().forEach(chapterId ->
+                questionService.getQuestionIDsForChapter(chapterId).forEach(questionId -> {
             final Optional<Lesson> lessonOpt = lessonRepository.findByReferenceId(questionId);
             if (lessonOpt.isEmpty()) {
                 final Question question = questionService.getQuestion(questionId);
@@ -72,7 +73,7 @@ public class LessonService extends BaseService {
                     lessonRepository.save(lesson);
                 }
             }
-        });
+        }));
         log.info("Lesson update complete.");
     }
 
