@@ -68,7 +68,6 @@ public class UpdateService {
     private TextConstService textConstService;
 
     @Scheduled(cron = "0 0 10 2,11,21 * ?")
-    @PostConstruct
     public void updateAll() {
         acsService.update();
         answerService.update();
