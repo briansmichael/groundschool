@@ -51,29 +51,30 @@ public class LessonService extends BaseService {
     }
 
     public void update() {
-        log.info("Updating Lesson info...");
-        chapterService.getAllChapterIDs().forEach(chapterId ->
-                questionService.getQuestionIDsForChapter(chapterId).forEach(questionId -> {
-            final Optional<Lesson> lessonOpt = lessonRepository.findByReferenceId(questionId);
-            if (lessonOpt.isEmpty()) {
-                final Question question = questionService.getQuestion(questionId);
-                if (question != null) {
-                    final Chapter chapter = chapterService.getChapter(question.getChapterId());
-                    final Lesson lesson = new Lesson();
-                    lesson.setTitle(Long.toString(questionId));
-                    lesson.setReferenceId(questionId);
-                    lesson.setChapterId(question.getChapterId());
-                    if (chapter != null) {
-                        lesson.setGroupId(chapter.getGroupId());
+        chapterService.getAllChapterIDs().forEach(chapterId -> {
+            log.info("Updating Lesson info for chapterId {}...", chapterId);
+            questionService.getQuestionIDsForChapter(chapterId).forEach(questionId -> {
+                final Optional<Lesson> lessonOpt = lessonRepository.findByReferenceId(questionId);
+                if (lessonOpt.isEmpty()) {
+                    final Question question = questionService.getQuestion(questionId);
+                    if (question != null) {
+                        final Chapter chapter = chapterService.getChapter(question.getChapterId());
+                        final Lesson lesson = new Lesson();
+                        lesson.setTitle(Long.toString(questionId));
+                        lesson.setReferenceId(questionId);
+                        lesson.setChapterId(question.getChapterId());
+                        if (chapter != null) {
+                            lesson.setGroupId(chapter.getGroupId());
+                        }
+                        lesson.setRequired(Boolean.FALSE);
+                        lesson.setText(question.getExplanation());
+                        lesson.setCreatedDate(new Date());
+                        lesson.setUpdatedDate(new Date());
+                        lessonRepository.save(lesson);
                     }
-                    lesson.setRequired(Boolean.FALSE);
-                    lesson.setText(question.getExplanation());
-                    lesson.setCreatedDate(new Date());
-                    lesson.setUpdatedDate(new Date());
-                    lessonRepository.save(lesson);
                 }
-            }
-        }));
+            });
+        });
         log.info("Lesson update complete.");
     }
 
