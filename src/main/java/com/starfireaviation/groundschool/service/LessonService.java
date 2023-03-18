@@ -56,17 +56,21 @@ public class LessonService extends BaseService {
             final Optional<Lesson> lessonOpt = lessonRepository.findByReferenceId(questionId);
             if (lessonOpt.isEmpty()) {
                 final Question question = questionService.getQuestion(questionId);
-                final Chapter chapter = chapterService.getChapter(question.getChapterId());
-                final Lesson lesson = new Lesson();
-                lesson.setTitle(Long.toString(questionId));
-                lesson.setReferenceId(questionId);
-                lesson.setChapterId(question.getChapterId());
-                lesson.setGroupId(chapter.getGroupId());
-                lesson.setRequired(Boolean.FALSE);
-                lesson.setText(question.getExplanation());
-                lesson.setCreatedDate(new Date());
-                lesson.setUpdatedDate(new Date());
-                lessonRepository.save(lesson);
+                if (question != null) {
+                    final Chapter chapter = chapterService.getChapter(question.getChapterId());
+                    final Lesson lesson = new Lesson();
+                    lesson.setTitle(Long.toString(questionId));
+                    lesson.setReferenceId(questionId);
+                    lesson.setChapterId(question.getChapterId());
+                    if (chapter != null) {
+                        lesson.setGroupId(chapter.getGroupId());
+                    }
+                    lesson.setRequired(Boolean.FALSE);
+                    lesson.setText(question.getExplanation());
+                    lesson.setCreatedDate(new Date());
+                    lesson.setUpdatedDate(new Date());
+                    lessonRepository.save(lesson);
+                }
             }
         });
         log.info("Lesson update complete.");

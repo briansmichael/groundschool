@@ -23,7 +23,6 @@ public class ACSService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT ID, GroupID, ParentID, Code, Description, IsCompletedCode, LastMod FROM ACS";
         for (final String course : courseService.getCourseList()) {

@@ -22,7 +22,6 @@ public class SubjectMatterCodeService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT ID, Code, SourceID, Description, LastMod, IsLSC FROM SubjectMatterCodes";
         for (final String course : courseService.getCourseList()) {

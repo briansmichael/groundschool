@@ -22,7 +22,6 @@ public class SourceService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT ID, Author, Title, Abbreviation, LastMod FROM Sources";
         for (final String course : courseService.getCourseList()) {

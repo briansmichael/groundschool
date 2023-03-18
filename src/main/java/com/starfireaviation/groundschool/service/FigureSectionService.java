@@ -22,7 +22,6 @@ public class FigureSectionService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT FigureSectionID, FigureSection, LastMod FROM FigureSections";
         for (final String course : courseService.getCourseList()) {

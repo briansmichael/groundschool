@@ -1,33 +1,13 @@
-package com.starfireaviation.groundschool.controller;
+package com.starfireaviation.groundschool.service;
 
-import com.starfireaviation.groundschool.service.ACSService;
-import com.starfireaviation.groundschool.service.AnswerService;
-import com.starfireaviation.groundschool.service.BinaryDataService;
-import com.starfireaviation.groundschool.service.ChapterService;
-import com.starfireaviation.groundschool.service.FigureSectionService;
-import com.starfireaviation.groundschool.service.GroupService;
-import com.starfireaviation.groundschool.service.ImageService;
-import com.starfireaviation.groundschool.service.LessonService;
-import com.starfireaviation.groundschool.service.LibraryService;
-import com.starfireaviation.groundschool.service.QuestionACSService;
-import com.starfireaviation.groundschool.service.QuestionRefImageService;
-import com.starfireaviation.groundschool.service.QuestionReferenceService;
-import com.starfireaviation.groundschool.service.QuestionService;
-import com.starfireaviation.groundschool.service.QuestionTestService;
-import com.starfireaviation.groundschool.service.RefService;
-import com.starfireaviation.groundschool.service.SourceService;
-import com.starfireaviation.groundschool.service.SubjectMatterCodeService;
-import com.starfireaviation.groundschool.service.TestService;
-import com.starfireaviation.groundschool.service.TextConstService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-@RestController
-@RequestMapping("/update")
-public class UpdateController {
+@Service
+@Slf4j
+public class UpdateService {
 
     @Autowired
     private ACSService acsService;
@@ -86,8 +66,7 @@ public class UpdateController {
     @Autowired
     private TextConstService textConstService;
 
-    @PostMapping
-    @Scheduled(cron = "0 0 10 1,10,20 * ?")
+    @Scheduled(cron = "0 0 10 2,11,21 * ?")
     public void updateAll() {
         acsService.update();
         answerService.update();
@@ -109,4 +88,5 @@ public class UpdateController {
         questionService.update();
         lessonService.update();
     }
+
 }

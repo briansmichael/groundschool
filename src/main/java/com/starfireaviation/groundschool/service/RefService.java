@@ -22,7 +22,6 @@ public class RefService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT RefID, RefText, LastMod FROM Refs";
         for (final String course : courseService.getCourseList()) {

@@ -24,7 +24,6 @@ public class ChapterService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT ChapterID, ChapterName, GroupID, SortBy, LastMod FROM Chapters";
         for (final String course: courseService.getCourseList()) {

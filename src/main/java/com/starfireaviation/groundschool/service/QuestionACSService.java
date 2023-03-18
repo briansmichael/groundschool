@@ -22,7 +22,6 @@ public class QuestionACSService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT ID, QuestionID, ACSID FROM QuestionsACS";
         for (final String course : courseService.getCourseList()) {

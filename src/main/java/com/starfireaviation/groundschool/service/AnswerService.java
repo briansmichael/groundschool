@@ -37,7 +37,6 @@ public class AnswerService extends BaseService {
      */
     private final Map<Long, List<Long>> choices = new HashMap<>();
 
-    @Async
     public void update() {
         initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
         final String query = "SELECT AnswerID, AnswerText, QuestionID, IsCorrect, LastMod FROM Answers ORDER BY AnswerID";

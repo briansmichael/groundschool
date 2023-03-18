@@ -22,7 +22,6 @@ public class BinaryDataService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT ID, Category, GroupID, ImageName, Desc, FileName, BinType, BinData, LastMod FROM BinaryData";
         for (final String course : courseService.getCourseList()) {

@@ -30,7 +30,6 @@ public class ImageService extends BaseService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    @Async
     public void update() {
         final String query = "SELECT ID, PicType, GroupID, TestID, ImageName, Desc, FileName, BinImage, LastMod, " +
                 "FigureSectionID, PixelsPerNM, SortBy, ImageLibraryID FROM Images";

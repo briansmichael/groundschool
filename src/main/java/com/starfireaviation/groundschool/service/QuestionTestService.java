@@ -22,7 +22,6 @@ public class QuestionTestService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT ID, QuestionID, TestID, IsLinked, SortBy, LinkChapter, IsImportant "
                 + "FROM QuestionsTests";

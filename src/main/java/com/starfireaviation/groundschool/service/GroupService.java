@@ -24,7 +24,6 @@ public class GroupService extends BaseService {
     @Autowired
     private CourseService courseService;
 
-    @Async
     public void update() {
         final String query = "SELECT GroupID, GroupName, GroupAbbr, LastMod FROM Groups";
         for (final String course : courseService.getCourseList()) {
