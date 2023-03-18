@@ -51,7 +51,7 @@ public class LessonService extends BaseService {
     }
 
     public void update() {
-        chapterService.getAllChapterIDs().forEach(chapterId -> {
+        chapterService.getAllChapterIDs().stream().sorted().forEach(chapterId -> {
             log.info("Updating Lesson info for chapterId {}...", chapterId);
             questionService.getQuestionIDsForChapter(chapterId).forEach(questionId -> {
                 final Optional<Lesson> lessonOpt = lessonRepository.findByReferenceId(questionId);
