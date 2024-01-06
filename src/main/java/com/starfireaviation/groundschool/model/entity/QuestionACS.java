@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,28 +23,22 @@ import java.io.Serializable;
 /**
  * QuestionACS.
  */
-@Entity
 @Data
-@Table(name = "question_acs")
 public class QuestionACS implements Serializable {
 
     /**
      * ID.
      */
-    @Id
-    @Column(name = "id")
     private Long id;
 
     /**
      * Question ID.
      */
-    @Column(name = "question_id")
     private Long questionId;
 
     /**
      * ACS ID.
      */
-    @Column(name = "acs_id")
     private Long acsId;
 
 }

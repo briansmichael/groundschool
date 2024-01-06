@@ -3,19 +3,21 @@ package com.starfireaviation.groundschool.service;
 import com.starfireaviation.groundschool.config.ApplicationProperties;
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.Question;
-import com.starfireaviation.groundschool.model.repository.QuestionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -24,8 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class QuestionService extends BaseService {
 
-    @Autowired
-    private QuestionRepository questionRepository;
+    private Map<Long, Question> cache = new HashMap<>();
 
     @Autowired
     private AnswerService answerService;
@@ -39,12 +40,15 @@ public class QuestionService extends BaseService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    public void update() {
+    public List<Question> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<Question> questions = new ArrayList<>();
         initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
         final String query = "SELECT QuestionID, QuestionText, ChapterID, SMCID, SourceID, LastMod, Explanation, "
                 + "OldQID, LSCID FROM Questions";
         for (final String course : courseService.getCourseList()) {
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -60,29 +64,31 @@ public class QuestionService extends BaseService {
                     question.setExplanation(processImages(decrypt(rs.getString(CommonConstants.SEVEN))));
                     question.setOldQuestionId(rs.getLong(CommonConstants.EIGHT));
                     question.setLscId(rs.getLong(CommonConstants.NINE));
-                    questionRepository.save(question);
+                    questions.add(question);
                 }
             } catch (SQLException | InvalidCipherTextException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (Question question : questions) {
+            cache.put(question.getQuestionId(), question);
+        }
+        return questions;
     }
 
     public List<Question> getQuestionsForChapter(final Long chapterId) {
-        return questionRepository.findAllByChapterId(chapterId).orElse(null);
+        return getAll().stream().filter(question -> Objects.equals(question.getChapterId(), chapterId)).collect(Collectors.toList());
     }
 
     public List<Long> getQuestionIDsForChapter(final Long chapterId) {
-        return questionRepository
-                .findAllByChapterId(chapterId)
-                .orElse(new ArrayList<>())
+        return getQuestionsForChapter(chapterId)
                 .stream()
                 .map(Question::getQuestionId)
                 .collect(Collectors.toList());
     }
 
     public Question getQuestion(final Long questionId) {
-        final Question question = questionRepository.findById(questionId).orElse(null);
+        final Question question = getAll().stream().filter(q -> Objects.equals(q.getQuestionId(), questionId)).findFirst().orElse(null);
         if (question != null) {
             question.setAnswers(answerService
                     .getAnswersForQuestion(questionId)

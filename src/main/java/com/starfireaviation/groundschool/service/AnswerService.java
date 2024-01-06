@@ -3,12 +3,11 @@ package com.starfireaviation.groundschool.service;
 import com.starfireaviation.groundschool.config.ApplicationProperties;
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.Answer;
-import com.starfireaviation.groundschool.model.repository.AnswerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,13 +17,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class AnswerService extends BaseService {
 
-    @Autowired
-    private AnswerRepository answerRepository;
+    private Map<Long, Answer> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
@@ -37,12 +37,15 @@ public class AnswerService extends BaseService {
      */
     private final Map<Long, List<Long>> choices = new HashMap<>();
 
-    public void update() {
+    public List<Answer> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<Answer> answers = new ArrayList<>();
         initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
         final String query = "SELECT AnswerID, AnswerText, QuestionID, IsCorrect, LastMod FROM Answers ORDER BY AnswerID";
         for (final String course : courseService.getCourseList()) {
             choices.clear();
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -55,16 +58,20 @@ public class AnswerService extends BaseService {
                     answer.setCorrect(rs.getBoolean(CommonConstants.FOUR));
                     answer.setLastModified(rs.getDate(CommonConstants.FIVE));
                     answer.setChoice(deriveChoice(answer.getQuestionId(), answer.getAnswerId()));
-                    answerRepository.save(answer);
+                    answers.add(answer);
                 }
             } catch (SQLException | InvalidCipherTextException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (Answer answer : answers) {
+            cache.put(answer.getAnswerId(), answer);
+        }
+        return answers;
     }
 
     public List<Answer> getAnswersForQuestion(final Long questionId) {
-        return answerRepository.findAllByQuestionId(questionId).orElse(new ArrayList<>());
+        return getAll().stream().filter(answer -> Objects.equals(answer.getQuestionId(), questionId)).collect(Collectors.toList());
     }
 
     /**

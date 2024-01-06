@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,46 +24,37 @@ import java.util.Date;
 /**
  * SubjectMatterCode.
  */
-@Entity
 @Data
-@Table(name = "subject_matter_code")
 public class SubjectMatterCode implements Serializable {
 
     /**
      * Remote ID.
      */
-    @Id
-    @Column(name = "id")
     private Long id;
 
     /**
      * Code.
      */
-    @Column(name = "code")
     private String code;
 
     /**
      * Source ID.
      */
-    @Column(name = "source_id")
     private Long sourceId;
 
     /**
      * Description.
      */
-    @Column(name = "description")
     private String description;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
     /**
      * Is LSC.
      */
-    @Column(name = "is_lsc")
     private Long isLSC;
 
 }

@@ -16,13 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -32,9 +25,7 @@ import java.util.List;
 /**
  * LessonPlan.
  */
-@Entity
 @Data
-@Table(name = "lesson_plan")
 public class LessonPlan implements Serializable {
 
     /**
@@ -45,86 +36,70 @@ public class LessonPlan implements Serializable {
     /**
      * ID.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
     private Long id;
 
     /**
      * Created At.
      */
-    @Column(name = "created_date")
     private Date createdDate = new Date();
 
     /**
      * Updated At.
      */
-    @Column(name = "updated_date")
     private Date updatedDate = new Date();
 
     /**
      * Title.
      */
-    @Column(name = "title", length = Integer.MAX_VALUE)
     private String title;
 
     /**
      * Summary.
      */
-    @Column(name = "summary", length = Integer.MAX_VALUE)
     private String summary;
 
     /**
      * Objective.
      */
-    @Column(name = "objective", length = Integer.MAX_VALUE)
     private String objective;
 
     /**
      * Content.
      */
-    @Column(name = "content", length = Integer.MAX_VALUE)
     private String content;
 
     /**
      * Schedule.
      */
-    @Column(name = "schedule", length = Integer.MAX_VALUE)
     private String schedule;
 
     /**
      * Equipment.
      */
-    @Column(name = "equipment", length = Integer.MAX_VALUE)
     private String equipment;
 
     /**
      * Instructor's Actions.
      */
-    @Column(name = "instructor_actions", length = Integer.MAX_VALUE)
     private String instructorActions;
 
     /**
      * Student's Actions.
      */
-    @Column(name = "student_actions", length = Integer.MAX_VALUE)
     private String studentActions;
 
     /**
      * Completion Standards.
      */
-    @Column(name = "completion_standards", length = Integer.MAX_VALUE)
     private String completionStandards;
 
     /**
      * Presentable flag.
      */
-    @Column(name = "presentable")
     private boolean presentable;
 
     /**
      * Lessons.
      */
-    @Transient
     private List<Lesson> lessons;
 }

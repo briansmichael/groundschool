@@ -1,28 +1,34 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.QuestionTest;
-import com.starfireaviation.groundschool.model.repository.QuestionTestRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class QuestionTestService extends BaseService {
 
-    @Autowired
-    private QuestionTestRepository questionTestRepository;
+    private Map<Long, QuestionTest> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
-    public void update() {
+    public List<QuestionTest> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<QuestionTest> questionTestList = new ArrayList<>();
         final String query = "SELECT ID, QuestionID, TestID, IsLinked, SortBy, LinkChapter, IsImportant "
                 + "FROM QuestionsTests";
         for (final String course : courseService.getCourseList()) {
@@ -39,11 +45,15 @@ public class QuestionTestService extends BaseService {
                     questionTest.setSortBy(rs.getLong(5));
                     questionTest.setLinkChapter(rs.getLong(6));
                     questionTest.setIsImportant(rs.getLong(7));
-                    questionTestRepository.save(questionTest);
+                    questionTestList.add(questionTest);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (QuestionTest questionTest : questionTestList) {
+            cache.put(questionTest.getId(), questionTest);
+        }
+        return questionTestList;
     }
 }

@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Objects;
 
 @Slf4j
 public abstract class BaseService {
@@ -59,11 +60,13 @@ public abstract class BaseService {
     }
 
     public void initCipher(final String secretKey, final String initVector) {
-        AESEngine engine = new AESEngine();
-        CBCBlockCipher blockCipher = new CBCBlockCipher(engine);
-        cipher = new PaddedBufferedBlockCipher(blockCipher);
-        KeyParameter keyParam = new KeyParameter(Base64.decode(secretKey));
-        cipher.init(false, new ParametersWithIV(keyParam, initVector.getBytes(StandardCharsets.UTF_8), 0, SIXTEEN));
+        if (Objects.isNull(cipher)) {
+            AESEngine engine = new AESEngine();
+            CBCBlockCipher blockCipher = new CBCBlockCipher(engine);
+            cipher = new PaddedBufferedBlockCipher(blockCipher);
+            KeyParameter keyParam = new KeyParameter(Base64.decode(secretKey));
+            cipher.init(false, new ParametersWithIV(keyParam, initVector.getBytes(StandardCharsets.UTF_8), 0, SIXTEEN));
+        }
     }
 
 }

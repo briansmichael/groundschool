@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,9 +24,7 @@ import java.util.Date;
 /**
  * FigureSection.
  */
-@Entity
 @Data
-@Table(name = "figure_section")
 public class FigureSection implements Serializable {
 
     /**
@@ -41,20 +35,16 @@ public class FigureSection implements Serializable {
     /**
      * Figure Section ID.
      */
-    @Id
-    @Column(name = "figure_section_id")
     private Long figureSectionId;
 
     /**
      * Figure Section.
      */
-    @Column(name = "figure_section", length = Integer.MAX_VALUE)
     private String figureSection;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
 }

@@ -16,91 +16,77 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity
 @Data
-@Table(name = "image")
 public class Image implements Serializable {
 
     /**
      * Image ID.
      */
-    @Id
-    @Column(name = "id")
     private Long id;
 
     /**
      * PicType.
      */
-    @Column(name = "pic_type")
     private Long picType;
 
     /**
      * GroupID.
      */
-    @Column(name = "group_id")
     private Long groupId;
 
     /**
      * Test ID.
      */
-    @Column(name = "test_id")
     private Long testId;
 
     /**
      * ImageName.
      */
-    @Column(name = "image_name")
     private String imageName;
 
     /**
      * Description.
      */
-    @Column(name = "description")
     private String description;
 
     /**
      * FileName.
      */
-    @Column(name = "filename")
     private String fileName;
 
     /**
      * Figure Section ID.
      */
-    @Column(name = "figure_section_id")
     private Long figureSectionId;
 
     /**
      * Pixels per NM.
      */
-    @Column(name = "pixels_per_nm")
     private Double pixelsPerNM;
 
     /**
      * Sort By.
      */
-    @Column(name = "sort_by")
     private Long sortBy;
+
+    /**
+     * Image.
+     */
+    private byte[] bytes;
 
     /**
      * Image Library ID.
      */
-    @Column(name = "image_library_id")
     private Long imageLibraryId;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
 }

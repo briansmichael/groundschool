@@ -88,13 +88,6 @@ public class LessonController {
         return lessonView(lesson.getId(), model);
     }
 
-    @PostMapping("/lessons/update")
-    public String updateLessons(final Model model) {
-        log.info("Updating Lessons.");
-        lessonService.update();
-        return "success"; //view
-    }
-
     @PutMapping("/lessons")
     public String updateLesson(final Lesson lesson, final Model model) {
         log.info("Updating Lesson.");

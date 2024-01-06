@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,9 +24,7 @@ import java.util.Date;
 /**
  * ACS.
  */
-@Entity
 @Data
-@Table(name = "acs")
 public class ACS implements Serializable {
 
     /**
@@ -41,44 +35,36 @@ public class ACS implements Serializable {
     /**
      * ID.
      */
-    @Id
-    @Column(name = "id")
     private Long id;
 
     /**
      * Group ID.
      */
-    @Column(name = "group_id")
     private Long groupId;
 
     /**
      * Parent ID.
      */
-    @Column(name = "parent_id")
     private Long parentId;
 
     /**
      * Code.
      */
-    @Column(name = "code")
     private String code;
 
     /**
      * Description.
      */
-    @Column(name = "description")
     private String description;
 
     /**
      * IsCompletedCode.
      */
-    @Column(name = "is_completed_code")
     private Long isCompletedCode;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
 }

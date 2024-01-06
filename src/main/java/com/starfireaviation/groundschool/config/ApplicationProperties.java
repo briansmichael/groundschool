@@ -13,5 +13,4 @@ public class ApplicationProperties {
 
     private String dbSrcLocation;
 
-    private String imagesDir;
 }

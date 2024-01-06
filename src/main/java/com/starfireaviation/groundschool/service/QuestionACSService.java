@@ -1,31 +1,36 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.QuestionACS;
-import com.starfireaviation.groundschool.model.repository.QuestionACSRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class QuestionACSService extends BaseService {
 
-    @Autowired
-    private QuestionACSRepository questionACSRepository;
+    private Map<Long, QuestionACS> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
-    public void update() {
+    public List<QuestionACS> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<QuestionACS> questionACSList = new ArrayList<>();
         final String query = "SELECT ID, QuestionID, ACSID FROM QuestionsACS";
         for (final String course : courseService.getCourseList()) {
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -34,11 +39,15 @@ public class QuestionACSService extends BaseService {
                     questionACS.setId(rs.getLong(1));
                     questionACS.setQuestionId(rs.getLong(2));
                     questionACS.setAcsId(rs.getLong(3));
-                    questionACSRepository.save(questionACS);
+                    questionACSList.add(questionACS);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (QuestionACS questionACS : questionACSList) {
+            cache.put(questionACS.getId(), questionACS);
+        }
+        return questionACSList;
     }
 }

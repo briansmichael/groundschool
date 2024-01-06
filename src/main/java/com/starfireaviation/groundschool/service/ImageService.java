@@ -3,26 +3,26 @@ package com.starfireaviation.groundschool.service;
 import com.starfireaviation.groundschool.config.ApplicationProperties;
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.Image;
-import com.starfireaviation.groundschool.model.repository.ImageRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Slf4j
 public class ImageService extends BaseService {
 
-    @Autowired
-    private ImageRepository imageRepository;
+    private Map<Long, Image> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
@@ -30,11 +30,14 @@ public class ImageService extends BaseService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    public void update() {
+    public List<Image> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<Image> images = new ArrayList<>();
         final String query = "SELECT ID, PicType, GroupID, TestID, ImageName, Desc, FileName, BinImage, LastMod, " +
                 "FigureSectionID, PixelsPerNM, SortBy, ImageLibraryID FROM Images";
         for (final String course : courseService.getCourseList()) {
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -56,28 +59,25 @@ public class ImageService extends BaseService {
                     image.setSortBy(rs.getLong(CommonConstants.TWELVE));
                     image.setImageLibraryId(rs.getLong(CommonConstants.THIRTEEN));
                     if (image.getFileName() != null && !"".equals(image.getFileName())) {
-                        final String fileName = applicationProperties.getImagesDir() + image.getId() + ".png";
-                        FileUtils.writeByteArrayToFile(new File(fileName), rs.getBytes(CommonConstants.EIGHT));
+                        image.setBytes(rs.getBytes(CommonConstants.EIGHT));
                     }
-                    imageRepository.save(image);
+                    images.add(image);
                 }
-            } catch (SQLException | IOException e) {
+            } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (Image image : images) {
+            cache.put(image.getId(), image);
+        }
+        return images;
     }
 
     public String getImageNameForId(final Long imageId) {
-        return imageRepository.findById(imageId).map(Image::getImageName).orElse(null);
+        return getAll().stream().filter(image -> Objects.equals(image.getId(), imageId)).findFirst().map(Image::getImageName).orElse(null);
     }
 
     public byte[] getImage(final Long imageId) {
-        try {
-            final File file = FileUtils.getFile(applicationProperties.getImagesDir(), imageId + ".png");
-            return FileUtils.readFileToByteArray(file);
-        } catch (IOException e) {
-            log.info("Unable to read image file for ID: {}", imageId);
-        }
-        return null;
+        return getAll().stream().filter(image -> Objects.equals(image.getId(), imageId)).map(Image::getBytes).findFirst().orElse(null);
     }
 }

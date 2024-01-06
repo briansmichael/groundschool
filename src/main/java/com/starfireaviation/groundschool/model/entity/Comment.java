@@ -17,12 +17,6 @@
 package com.starfireaviation.groundschool.model.entity;
 
 import com.starfireaviation.groundschool.model.enums.ComponentType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -31,9 +25,7 @@ import java.util.Date;
 /**
  * Comment.
  */
-@Entity
 @Data
-@Table(name = "comment")
 public class Comment implements Serializable {
 
     /**
@@ -44,45 +36,36 @@ public class Comment implements Serializable {
     /**
      * ID.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
     private Long id;
 
     /**
      * Created Date.
      */
-    @Column(name = "created_date")
     private Date createdDate = new Date();
 
     /**
      * Updated Date.
      */
-    @Column(name = "updated_date")
     private Date updatedDate = new Date();
 
     /**
      * Text.
      */
-    @Column(name = "text")
     private String text;
 
     /**
      * User ID.
      */
-    @Column(name = "user_id")
     private Long userId;
 
     /**
      * Reference ID.
      */
-    @Column(name = "reference_id")
     private Long referenceId;
 
     /**
      * ComponentType.
      */
-    @Column(name = "component_type")
     private ComponentType componentType;
 
 }

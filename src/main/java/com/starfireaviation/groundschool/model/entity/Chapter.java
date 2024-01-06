@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,9 +24,7 @@ import java.util.Date;
 /**
  * Chapter.
  */
-@Entity
 @Data
-@Table(name = "chapter")
 public class Chapter implements Serializable {
 
     /**
@@ -41,32 +35,26 @@ public class Chapter implements Serializable {
     /**
      * Chapter ID.
      */
-    @Id
-    @Column(name = "chapter_id")
     private Long chapterId;
 
     /**
      * ChapterName.
      */
-    @Column(name = "chapter_name")
     private String chapterName;
 
     /**
      * Group ID.
      */
-    @Column(name = "group_id")
     private Long groupId;
 
     /**
      * Sort By.
      */
-    @Column(name = "sort_by")
     private Long sortBy;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
 }

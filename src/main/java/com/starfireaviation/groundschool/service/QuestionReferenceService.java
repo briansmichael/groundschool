@@ -1,31 +1,36 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.QuestionReference;
-import com.starfireaviation.groundschool.model.repository.QuestionReferenceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class QuestionReferenceService extends BaseService {
 
-    @Autowired
-    private QuestionReferenceRepository questionReferenceRepository;
+    private Map<Long, QuestionReference> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
-    public void update() {
+    public List<QuestionReference> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<QuestionReference> questionReferenceList = new ArrayList<>();
         final String query = "SELECT ID, QuestionID, RefID FROM QuestionsReferences";
         for (final String course : courseService.getCourseList()) {
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -34,11 +39,15 @@ public class QuestionReferenceService extends BaseService {
                     questionReference.setId(rs.getLong(1));
                     questionReference.setQuestionId(rs.getLong(2));
                     questionReference.setRefId(rs.getLong(3));
-                    questionReferenceRepository.save(questionReference);
+                    questionReferenceList.add(questionReference);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (QuestionReference questionReference : questionReferenceList) {
+            cache.put(questionReference.getId(), questionReference);
+        }
+        return questionReferenceList;
     }
 }

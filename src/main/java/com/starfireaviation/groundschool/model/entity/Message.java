@@ -19,94 +19,72 @@ package com.starfireaviation.groundschool.model.entity;
 import com.starfireaviation.groundschool.model.enums.NotificationEventType;
 import com.starfireaviation.groundschool.model.enums.NotificationType;
 import com.starfireaviation.groundschool.model.enums.Priority;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.Instant;
 
-@Entity
 @Data
-@Table(name = "message")
 public class Message implements Comparable<Message>, Serializable {
 
     /**
      * ID.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
     private Long id;
 
     /**
      * Priority.
      */
-    @Column(name = "priority")
     private Priority priority;
 
     /**
      * Payload.
      */
-    @Column(name = "payload")
     private String payload;
 
     /**
      * NotificationType.
      */
-    @Column(name = "notification_type")
     private NotificationType notificationType;
 
     /**
      * NotificationEventType.
      */
-    @Column(name = "notification_event_type")
     private NotificationEventType notificationEventType;
 
     /**
      * User ID.
      */
-    @Column(name = "user_id")
     private Long userId;
 
     /**
      * Quiz ID.
      */
-    @Column(name = "quiz_id")
     private Long quizId;
 
     /**
      * Event ID.
      */
-    @Column(name = "event_id")
     private Long eventId;
 
     /**
      * Question ID.
      */
-    @Column(name = "question_id")
     private Long questionId;
 
     /**
      * Lesson ID.
      */
-    @Column(name = "lesson_id")
     private Long lessonId;
 
     /**
      * Reference Material ID.
      */
-    @Column(name = "reference_material_id")
     private Long referenceMaterialId;
 
     /**
      * Expiration time.
      */
-    @Column(name = "expiration_time")
     private Instant expirationTime;
 
     /**

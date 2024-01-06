@@ -1,32 +1,37 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.Library;
-import com.starfireaviation.groundschool.model.repository.LibraryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class LibraryService extends BaseService {
 
-    @Autowired
-    private LibraryRepository libraryRepository;
+    private Map<Long, Library> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
-    public void update() {
+    public List<Library> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<Library> libraries = new ArrayList<>();
         final String query = "SELECT ID, Region, ParentID, Name, Description, IsSection, Source, Ordinal, LastMod "
                 + "FROM Library";
         for (final String course : courseService.getCourseList()) {
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -41,11 +46,15 @@ public class LibraryService extends BaseService {
                     library.setSource(rs.getString(7));
                     library.setOrdinal(rs.getLong(8));
                     library.setLastModified(rs.getDate(9));
-                    libraryRepository.save(library);
+                    libraries.add(library);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (Library library : libraries) {
+            cache.put(library.getId(), library);
+        }
+        return libraries;
     }
 }

@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,52 +23,42 @@ import java.io.Serializable;
 /**
  * QuestionTest.
  */
-@Entity
 @Data
-@Table(name = "question_test")
 public class QuestionTest implements Serializable {
 
     /**
      * ID.
      */
-    @Id
-    @Column(name = "id")
     private Long id;
 
     /**
      * Question ID.
      */
-    @Column(name = "question_id")
     private Long questionId;
 
     /**
      * Test ID.
      */
-    @Column(name = "test_id")
     private Long testId;
 
     /**
      * Is Linked.
      */
-    @Column(name = "is_linked")
     private Long isLinked;
 
     /**
      * Sort By.
      */
-    @Column(name = "sort_by")
     private Long sortBy;
 
     /**
      * Link Chapter.
      */
-    @Column(name = "link_chapter")
     private Long linkChapter;
 
     /**
      * Is Important.
      */
-    @Column(name = "is_important")
     private Long isImportant;
 
 }

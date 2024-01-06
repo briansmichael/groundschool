@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,9 +24,7 @@ import java.util.Date;
 /**
  * Answer.
  */
-@Entity
 @Data
-@Table(name = "answer")
 public class Answer implements Comparable, Serializable {
 
     /**
@@ -41,38 +35,31 @@ public class Answer implements Comparable, Serializable {
     /**
      * ID.
      */
-    @Id
-    @Column(name = "answer_id")
     private Long answerId;
 
     /**
      * Answer Text.
      */
-    @Column(name = "text", length = Integer.MAX_VALUE)
     private String text;
 
     /**
      * Question ID.
      */
-    @Column(name = "question_id")
     private Long questionId;
 
     /**
      * Is Correct.
      */
-    @Column(name = "correct")
     private Boolean correct;
 
     /**
      * Choice.
      */
-    @Column(name = "choice")
     private String choice;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
     @Override

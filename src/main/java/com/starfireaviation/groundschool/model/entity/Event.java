@@ -17,12 +17,6 @@
 package com.starfireaviation.groundschool.model.entity;
 
 import com.starfireaviation.groundschool.model.enums.EventType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -31,9 +25,7 @@ import java.time.LocalDateTime;
 /**
  * Event.
  */
-@Entity
 @Data
-@Table(name = "event")
 public class Event implements Comparable, Serializable {
 
     /**
@@ -44,81 +36,66 @@ public class Event implements Comparable, Serializable {
     /**
      * ID.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
     private Long id;
 
     /**
      * Title.
      */
-    @Column(name = "title")
     private String title;
 
     /**
      * Event started?
      */
-    @Column(name = "started")
     private boolean started = false;
 
     /**
      * LocalDateTime - startTime.
      */
-    @Column(name = "start_time")
     private LocalDateTime startTime;
 
     /**
      * Event completed?
      */
-    @Column(name = "completed")
     private boolean completed = false;
 
     /**
      * LocalDateTime - completedTime.
      */
-    @Column(name = "completed_time")
     private LocalDateTime completedTime;
 
     /**
      * Google calendar URL.
      */
-    @Column(name = "calendar_url")
     private String calendarUrl;
 
     /**
      * Checkin code.
      */
-    @Column(name = "checkin_code")
     private String checkinCode;
 
     /**
      * Checkin code required.
      */
-    @Column(name = "checkin_code_required")
     private boolean checkinCodeRequired;
 
     /**
      * Private (no public notices, only private ones).
      */
-    @Column(name = "private_event")
     private boolean privateEvent = false;
 
     /**
      * EventType.
      */
-    @Column(name = "event_type")
     private EventType eventType;
 
     /**
      * LessonPlan ID.
      */
-    @Column(name = "lesson_plan_id")
     private Long lessonPlanId;
 
     /**
      * Event lead (or primary instructor).
      */
-    @Column(name = "event_lead")
     private Long lead;
 
     @Override

@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,46 +24,37 @@ import java.util.Date;
 /**
  * Tests.
  */
-@Entity
 @Data
-@Table(name = "test")
 public class Test implements Serializable {
 
     /**
      * Test ID.
      */
-    @Id
-    @Column(name = "test_id")
     private Long testId;
 
     /**
      * TestName.
      */
-    @Column(name = "test_name")
     private String testName;
 
     /**
      * TestAbbr.
      */
-    @Column(name = "test_abbr")
     private String testAbbr;
 
     /**
      * Group ID.
      */
-    @Column(name = "group_id")
     private Long groupId;
 
     /**
      * Sort By.
      */
-    @Column(name = "sort_by")
     private Long sortBy;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
 }

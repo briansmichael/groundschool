@@ -16,11 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -30,82 +25,67 @@ import java.util.List;
 /**
  * Question.
  */
-@Entity
 @Data
-@Table(name = "question")
 public class Question implements Serializable {
 
     /**
      * Question ID.
      */
-    @Id
-    @Column(name = "question_id")
     private Long questionId;
 
     /**
      * Old Question ID.
      */
-    @Column(name = "old_question_id")
     private Long oldQuestionId;
 
     /**
      * Question Text.
      */
-    @Column(name = "text", length = Integer.MAX_VALUE)
     private String text;
 
     /**
      * Chapter ID.
      */
-    @Column(name = "chapter_id")
     private Long chapterId;
 
     /**
      * SMC ID.
      */
-    @Column(name = "smc_id")
     private Long smcId;
 
     /**
      * Source.
      */
-    @Column(name = "source")
     private String source;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
     /**
      * Explanation.
      */
-    @Column(name = "explanation", length = Integer.MAX_VALUE)
     private String explanation;
 
     /**
      * LearningStatementCode.
      */
-    @Column(name = "learning_statement_code")
     private String learningStatementCode;
 
     /**
      * Learning Statement Code ID.
      */
-    @Column(name = "lsc_id")
     private Long lscId;
 
     /**
      * List of answers.
      */
-    @Transient
     private List<Answer> answers;
 
     /**
      * List of image IDs.
      */
-    @Transient
     private List<Long> imageIds;
 
 }

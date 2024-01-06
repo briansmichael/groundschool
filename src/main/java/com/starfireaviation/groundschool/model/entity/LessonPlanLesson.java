@@ -16,12 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -29,29 +23,22 @@ import java.io.Serializable;
 /**
  * LessonPlanLesson.
  */
-@Entity
 @Data
-@Table(name = "lesson_plan_lesson")
 public class LessonPlanLesson implements Serializable {
 
     /**
      * ID.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
     private Long id;
 
     /**
      * Lesson ID.
      */
-    @Column(name = "lesson_id")
     private Long lessonId;
 
     /**
      * LessonPlan ID.
      */
-    @Column(name = "lesson_plan_id")
     private Long lessonPlanId;
 
 }

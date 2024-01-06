@@ -2,31 +2,36 @@ package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.ACS;
-import com.starfireaviation.groundschool.model.repository.ACSRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class ACSService extends BaseService {
 
-    @Autowired
-    private ACSRepository acsRepository;
+    private Map<Long, ACS> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
-    public void update() {
+    public List<ACS> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<ACS> acsList = new ArrayList<>();
         final String query = "SELECT ID, GroupID, ParentID, Code, Description, IsCompletedCode, LastMod FROM ACS";
         for (final String course : courseService.getCourseList()) {
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -39,11 +44,15 @@ public class ACSService extends BaseService {
                     acs.setDescription(rs.getString(CommonConstants.FIVE));
                     acs.setIsCompletedCode(rs.getLong(CommonConstants.SIX));
                     acs.setLastModified(rs.getDate(CommonConstants.SEVEN));
-                    acsRepository.save(acs);
+                    acsList.add(acs);
                 }
             } catch (SQLException sqle) {
                 log.error("Error: {}", sqle.getMessage());
             }
         }
+        for (ACS acs : acsList) {
+            cache.put(acs.getId(), acs);
+        }
+        return acsList;
     }
 }

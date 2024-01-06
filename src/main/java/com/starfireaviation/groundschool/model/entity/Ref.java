@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,28 +24,22 @@ import java.util.Date;
 /**
  * Ref.
  */
-@Entity
 @Data
-@Table(name = "ref")
 public class Ref implements Serializable {
 
     /**
      * Ref ID.
      */
-    @Id
-    @Column(name = "ref_id")
     private Long refId;
 
     /**
      * RefText.
      */
-    @Column(name = "ref_text", length = Integer.MAX_VALUE)
     private String refText;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
 }

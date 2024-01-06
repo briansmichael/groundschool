@@ -1,28 +1,34 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.SubjectMatterCode;
-import com.starfireaviation.groundschool.model.repository.SubjectMatterCodeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class SubjectMatterCodeService extends BaseService {
 
-    @Autowired
-    private SubjectMatterCodeRepository subjectMatterCodeRepository;
+    private Map<Long, SubjectMatterCode> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
-    public void update() {
+    public List<SubjectMatterCode> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<SubjectMatterCode> subjectMatterCodeList = new ArrayList<>();
         final String query = "SELECT ID, Code, SourceID, Description, LastMod, IsLSC FROM SubjectMatterCodes";
         for (final String course : courseService.getCourseList()) {
             log.info("Updating {} info...", course);
@@ -37,11 +43,15 @@ public class SubjectMatterCodeService extends BaseService {
                     subjectMatterCode.setDescription(rs.getString(4));
                     subjectMatterCode.setLastModified(rs.getDate(5));
                     subjectMatterCode.setIsLSC(rs.getLong(6));
-                    subjectMatterCodeRepository.save(subjectMatterCode);
+                    subjectMatterCodeList.add(subjectMatterCode);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (SubjectMatterCode subjectMatterCode : subjectMatterCodeList) {
+            cache.put(subjectMatterCode.getId(), subjectMatterCode);
+        }
+        return subjectMatterCodeList;
     }
 }

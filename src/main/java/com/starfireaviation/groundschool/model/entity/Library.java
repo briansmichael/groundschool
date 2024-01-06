@@ -16,10 +16,6 @@
 
 package com.starfireaviation.groundschool.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,64 +23,52 @@ import java.util.Date;
 /**
  * Library.
  */
-@Entity
 @Data
-@Table(name = "library")
 public class Library {
 
     /**
      * ID.
      */
-    @Id
-    @Column(name = "id")
     private Long id;
 
     /**
      * Region.
      */
-    @Column(name = "region")
     private String region;
 
     /**
      * ParentID.
      */
-    @Column(name = "parent_id")
     private Long parentId;
 
     /**
      * Name.
      */
-    @Column(name = "name")
     private String name;
 
     /**
      * Description.
      */
-    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
     /**
      * IsSection.
      */
-    @Column(name = "is_section")
     private Long isSection;
 
     /**
      * Source.
      */
-    @Column(name = "source")
     private String source;
 
     /**
      * Ordinal.
      */
-    @Column(name = "ordinal")
     private Long ordinal;
 
     /**
      * Last Modified.
      */
-    @Column(name = "last_modified")
     private Date lastModified;
 
 }

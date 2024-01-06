@@ -1,28 +1,34 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.FigureSection;
-import com.starfireaviation.groundschool.model.repository.FigureSectionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class FigureSectionService extends BaseService {
 
-    @Autowired
-    private FigureSectionRepository figureSectionRepository;
+    private Map<Long, FigureSection> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
-    public void update() {
+    public List<FigureSection> getAll() {
+        if (!CollectionUtils.isEmpty(cache)) {
+            return new ArrayList<>(cache.values());
+        }
+        final List<FigureSection> figureSectionList = new ArrayList<>();
         final String query = "SELECT FigureSectionID, FigureSection, LastMod FROM FigureSections";
         for (final String course : courseService.getCourseList()) {
             log.info("Updating {} info...", course);
@@ -34,11 +40,15 @@ public class FigureSectionService extends BaseService {
                     figureSection.setFigureSectionId(rs.getLong(1));
                     figureSection.setFigureSection(rs.getString(2));
                     figureSection.setLastModified(rs.getDate(3));
-                    figureSectionRepository.save(figureSection);
+                    figureSectionList.add(figureSection);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
+        for (FigureSection figureSection : figureSectionList) {
+            cache.put(figureSection.getFigureSectionId(), figureSection);
+        }
+        return figureSectionList;
     }
 }

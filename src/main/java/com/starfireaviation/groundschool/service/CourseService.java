@@ -10,6 +10,7 @@ import java.util.List;
 public class CourseService {
 
     public static final String COMPLETE_COURSE_LIST = "AMA,AMG,AMP,ATP,CFI,COM,FLE,IFR,IOF,MCI,MIL,PAR,PVT,SPG,SPI"; //RDP
+    //public static final String COMPLETE_COURSE_LIST = "PVT";
 
     public List<String> getCourseList() {
         return new ArrayList<>(Arrays.stream(COMPLETE_COURSE_LIST.split(",")).toList());
