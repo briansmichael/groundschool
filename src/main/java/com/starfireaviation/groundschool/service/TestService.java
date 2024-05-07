@@ -1,10 +1,10 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.Test;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,16 +19,17 @@ import java.util.Map;
 @Slf4j
 public class TestService extends BaseService {
 
-    private Map<Long, Test> cache = new HashMap<>();
+    private final Map<Long, Test> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
     public List<Test> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<Test> tests = new ArrayList<>();
+        return new ArrayList<>(cache.values());
+    }
+
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT TestID, TestName, TestAbbr, GroupID, SortBy, LastMod FROM Tests";
         for (final String course : courseService.getCourseList()) {
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
@@ -42,15 +43,11 @@ public class TestService extends BaseService {
                     test.setGroupId(rs.getLong(4));
                     test.setSortBy(rs.getLong(5));
                     test.setLastModified(rs.getDate(6));
-                    tests.add(test);
+                    cache.put(test.getTestId(), test);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
-        for (Test test : tests) {
-            cache.put(test.getTestId(), test);
-        }
-        return tests;
     }
 }

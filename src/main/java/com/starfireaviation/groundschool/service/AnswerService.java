@@ -3,11 +3,11 @@ package com.starfireaviation.groundschool.service;
 import com.starfireaviation.groundschool.config.ApplicationProperties;
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.Answer;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AnswerService extends BaseService {
 
-    private Map<Long, Answer> cache = new HashMap<>();
+    private final Map<Long, Answer> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
@@ -38,36 +38,7 @@ public class AnswerService extends BaseService {
     private final Map<Long, List<Long>> choices = new HashMap<>();
 
     public List<Answer> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<Answer> answers = new ArrayList<>();
-        initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
-        final String query = "SELECT AnswerID, AnswerText, QuestionID, IsCorrect, LastMod FROM Answers ORDER BY AnswerID";
-        for (final String course : courseService.getCourseList()) {
-            choices.clear();
-            try (Connection sqlLiteConn = getSQLLiteConnection(course);
-                 PreparedStatement ps = sqlLiteConn.prepareStatement(query);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    final Answer answer = new Answer();
-                    answer.setAnswerId(rs.getLong(1));
-                    //answer.setText(Jsoup.parse(decrypt(rs.getString(2))).text());
-                    answer.setText(decrypt(rs.getString(2)));
-                    answer.setQuestionId(rs.getLong(CommonConstants.THREE));
-                    answer.setCorrect(rs.getBoolean(CommonConstants.FOUR));
-                    answer.setLastModified(rs.getDate(CommonConstants.FIVE));
-                    answer.setChoice(deriveChoice(answer.getQuestionId(), answer.getAnswerId()));
-                    answers.add(answer);
-                }
-            } catch (SQLException | InvalidCipherTextException e) {
-                log.error("Error: {}", e.getMessage());
-            }
-        }
-        for (Answer answer : answers) {
-            cache.put(answer.getAnswerId(), answer);
-        }
-        return answers;
+        return new ArrayList<>(cache.values());
     }
 
     public List<Answer> getAnswersForQuestion(final Long questionId) {
@@ -99,5 +70,31 @@ public class AnswerService extends BaseService {
         answerIds.add(answerId);
         choices.put(questionId, answerIds);
         return choice;
+    }
+
+    @PostConstruct
+    public void loadData() {
+        initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
+        final String query = "SELECT AnswerID, AnswerText, QuestionID, IsCorrect, LastMod FROM Answers ORDER BY AnswerID";
+        for (final String course : courseService.getCourseList()) {
+            choices.clear();
+            try (Connection sqlLiteConn = getSQLLiteConnection(course);
+                 PreparedStatement ps = sqlLiteConn.prepareStatement(query);
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    final Answer answer = new Answer();
+                    answer.setAnswerId(rs.getLong(1));
+                    //answer.setText(Jsoup.parse(decrypt(rs.getString(2))).text());
+                    answer.setText(decrypt(rs.getString(2)));
+                    answer.setQuestionId(rs.getLong(CommonConstants.THREE));
+                    answer.setCorrect(rs.getBoolean(CommonConstants.FOUR));
+                    answer.setLastModified(rs.getDate(CommonConstants.FIVE));
+                    answer.setChoice(deriveChoice(answer.getQuestionId(), answer.getAnswerId()));
+                    cache.put(answer.getAnswerId(), answer);
+                }
+            } catch (SQLException | InvalidCipherTextException e) {
+                log.error("Error: {}", e.getMessage());
+            }
+        }
     }
 }

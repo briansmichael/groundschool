@@ -35,22 +35,19 @@ public class QuestionController {
 
     @GetMapping("/questions")
     public String getQuestion(@PathParam("questionId") final Long questionId, final Model model) {
-        try {
-            final Question question = questionService.getQuestion(questionId);
-            final Long chapterId = question.getChapterId();
-            final Chapter chapter = chapterService.getChapter(chapterId);
-            final Long groupId = chapter.getGroupId();
-            final Map<Long, String> groups = groupService.getGroupMap();
-            model.addAttribute("groups", groups);
-            model.addAttribute("groupId", groupId);
-            model.addAttribute("chapters", chapterService.getChapterMap(groupId));
-            model.addAttribute("chapterId", chapterId);
-            final List<Question> questions = questionService.getQuestionsForChapter(chapterId);
-            model.addAttribute("questions", questions);
-            return questionView(groupId, chapterId, questionId, model);
-        } catch (Exception e) {
-            return defaultView(model);
-        }
+        final Long qId = questionId != null ? questionId : 13096L;
+        final Question question = questionService.getQuestion(qId);
+        final Long chapterId = question.getChapterId();
+        final Chapter chapter = chapterService.getChapter(chapterId);
+        final Long groupId = chapter.getGroupId();
+        final Map<Long, String> groups = groupService.getGroupMap();
+        model.addAttribute("groups", groups);
+        model.addAttribute("groupId", groupId);
+        model.addAttribute("chapters", chapterService.getChapterMap(groupId));
+        model.addAttribute("chapterId", chapterId);
+        final List<Question> questions = questionService.getQuestionsForChapter(chapterId);
+        model.addAttribute("questions", questions);
+        return questionView(groupId, chapterId, qId, model);
     }
 
     @PostMapping("/questions")
@@ -61,11 +58,13 @@ public class QuestionController {
         final Map<Long, String> groupsMap = groupService.getGroupMap();
         model.addAttribute("groups", groupsMap);
         final Map<Long, String> chaptersMap = chapterService.getChapterMap(groupId);
+        log.info("Found {} chapters for group {}", chaptersMap.size(), groupId);
         model.addAttribute("chapters", chaptersMap);
         if (!chaptersMap.containsKey(chapterId)) {
             chapterId = chaptersMap.keySet().stream().findFirst().orElse(1L);
         }
         final List<Question> questions = questionService.getQuestionsForChapter(chapterId);
+        log.info("Found {} questions for chapter {}", questions.size(), chapterId);
         model.addAttribute("questions", questions);
         final Long finalQuestionId = questionId;
         if (questions.stream().noneMatch(q -> Objects.equals(q.getQuestionId(), finalQuestionId))) {
@@ -74,21 +73,8 @@ public class QuestionController {
         return questionView(groupId, chapterId, questionId, model);
     }
 
-    private String defaultView(final Model model) {
-        final Long groupId = 1L;
-        final Map<Long, String> groups = groupService.getGroupMap();
-        model.addAttribute("groups", groups);
-        final Map<Long, String> chapters = chapterService.getChapterMap(groupId);
-        model.addAttribute("chapters", chapters);
-        final Long chapterId = chapters.keySet().stream().findFirst().orElse(1L);
-        model.addAttribute("chapterId", chapterId);
-        final List<Question> questions = questionService.getQuestionsForChapter(chapterId);
-        model.addAttribute("questions", questions);
-        final Long questionId = questions.get(0).getQuestionId(); //5692L;
-        return questionView(groupId, chapterId, questionId, model);
-    }
-
     private String questionView(final Long groupId, final Long chapterId, final Long questionId, final Model model) {
+        log.info("Viewing question with groupId: {}; chapterId: {}; questionId: {}", groupId, chapterId, questionId);
         model.addAttribute("question", questionService.getQuestion(questionId));
 
         final Selection selection = new Selection();

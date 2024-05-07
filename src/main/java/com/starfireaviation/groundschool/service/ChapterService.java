@@ -1,10 +1,10 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.Chapter;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,23 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class ChapterService extends BaseService {
 
-    private Map<Long, Chapter> cache = new HashMap<>();
+    private final Map<Long, Chapter> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
-    public Map<Long, String> getFullChapterMap() {
-        final Map<Long, String> map = new HashMap<>();
-        getAll()
-                .forEach(chapter -> map.put(chapter.getChapterId(), chapter.getChapterName()));
-        return map;
-    }
+    @Autowired
+    private QuestionService questionService;
 
     public Chapter getChapter(final Long chapterId) {
         return getAll().stream().filter(chapter -> Objects.equals(chapter.getChapterId(), chapterId)).findFirst().orElse(null);
@@ -42,22 +37,19 @@ public class ChapterService extends BaseService {
         getAll()
                 .stream()
                 .filter(chapter -> Objects.equals(groupId, chapter.getGroupId()))
+                .peek(c -> log.info("[BEFORE] GroupId: {}; Chapter ID: {}", groupId, c.getChapterId()))
+                .filter(chapter -> !questionService.getQuestionsForChapter(chapter.getChapterId()).isEmpty())
+                .peek(c -> log.info("[AFTER] GroupId: {}; Chapter ID: {}", groupId, c.getChapterId()))
                 .forEach(chapter -> map.put(chapter.getChapterId(), chapter.getChapterName()));
         return map;
     }
 
-    public List<Long> getAllChapterIDs() {
-        return getAll()
-                .stream()
-                .map(Chapter::getChapterId)
-                .collect(Collectors.toList());
+    public List<Chapter> getAll() {
+        return new ArrayList<>(cache.values());
     }
 
-    public List<Chapter> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<Chapter> chapters = new ArrayList<>();
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT ChapterID, ChapterName, GroupID, SortBy, LastMod FROM Chapters";
         for (final String course: courseService.getCourseList()) {
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
@@ -65,20 +57,35 @@ public class ChapterService extends BaseService {
                  ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     final Chapter chapter = new Chapter();
-                    chapter.setChapterId(rs.getLong(1));
+                    if ("IOF".equalsIgnoreCase(course)) {
+                        chapter.setChapterId(rs.getLong(4));
+                    } else {
+                        chapter.setChapterId(rs.getLong(1));
+                    }
                     chapter.setChapterName(rs.getString(2));
                     chapter.setGroupId(rs.getLong(3));
                     chapter.setSortBy(rs.getLong(4));
                     chapter.setLastModified(rs.getDate(5));
-                    chapters.add(chapter);
+                    if (cache.containsKey(chapter.getChapterId())) {
+                        log.warn("{} would have overwritten existing chapter: {}",
+                                cache.get(chapter.getChapterId()), chapter);
+                    } else {
+                        cache.put(chapter.getChapterId(), chapter);
+                    }
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
-        for (Chapter chapter : chapters) {
-            cache.put(chapter.getChapterId(), chapter);
-        }
-        return chapters;
+//        cache.values()
+//                .stream()
+//                .map(Chapter::getChapterId)
+//                .sorted()
+//                .toList()
+//                .forEach(id -> {
+//                    final Chapter chapter = cache.get(id);
+//                    log.info("Chapter ID: {} Group ID: {} Title: {}",
+//                            id, chapter.getGroupId(), chapter.getChapterName());
+//                });
     }
 }

@@ -1,10 +1,10 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.BinaryData;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,16 +19,17 @@ import java.util.Map;
 @Slf4j
 public class BinaryDataService extends BaseService {
 
-    private Map<Long, BinaryData> cache = new HashMap<>();
+    private final Map<Long, BinaryData> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
     public List<BinaryData> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<BinaryData> binaryDataList = new ArrayList<>();
+        return new ArrayList<>(cache.values());
+    }
+
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT ID, Category, GroupID, ImageName, Desc, FileName, BinType, BinData, LastMod FROM BinaryData";
         for (final String course : courseService.getCourseList()) {
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
@@ -44,15 +45,11 @@ public class BinaryDataService extends BaseService {
                     binaryData.setFileName(rs.getString(6));
                     binaryData.setBinType(rs.getLong(7));
                     binaryData.setLastModified(rs.getDate(9));
-                    binaryDataList.add(binaryData);
+                    cache.put(binaryData.getId(), binaryData);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
-        for (BinaryData binaryData : binaryDataList) {
-            cache.put(binaryData.getId(), binaryData);
-        }
-        return binaryDataList;
     }
 }

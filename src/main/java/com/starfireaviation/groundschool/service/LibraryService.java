@@ -1,10 +1,10 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.Library;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,16 +19,17 @@ import java.util.Map;
 @Slf4j
 public class LibraryService extends BaseService {
 
-    private Map<Long, Library> cache = new HashMap<>();
+    private final Map<Long, Library> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
     public List<Library> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<Library> libraries = new ArrayList<>();
+        return new ArrayList<>(cache.values());
+    }
+
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT ID, Region, ParentID, Name, Description, IsSection, Source, Ordinal, LastMod "
                 + "FROM Library";
         for (final String course : courseService.getCourseList()) {
@@ -46,15 +47,11 @@ public class LibraryService extends BaseService {
                     library.setSource(rs.getString(7));
                     library.setOrdinal(rs.getLong(8));
                     library.setLastModified(rs.getDate(9));
-                    libraries.add(library);
+                    cache.put(library.getId(), library);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
-        for (Library library : libraries) {
-            cache.put(library.getId(), library);
-        }
-        return libraries;
     }
 }

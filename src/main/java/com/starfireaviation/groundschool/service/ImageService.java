@@ -3,10 +3,10 @@ package com.starfireaviation.groundschool.service;
 import com.starfireaviation.groundschool.config.ApplicationProperties;
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.Image;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +22,7 @@ import java.util.Objects;
 @Slf4j
 public class ImageService extends BaseService {
 
-    private Map<Long, Image> cache = new HashMap<>();
+    private final Map<Long, Image> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
@@ -31,10 +31,19 @@ public class ImageService extends BaseService {
     private ApplicationProperties applicationProperties;
 
     public List<Image> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<Image> images = new ArrayList<>();
+        return new ArrayList<>(cache.values());
+    }
+
+    public String getImageNameForId(final Long imageId) {
+        return getAll().stream().filter(image -> Objects.equals(image.getId(), imageId)).findFirst().map(Image::getImageName).orElse(null);
+    }
+
+    public byte[] getImage(final Long imageId) {
+        return getAll().stream().filter(image -> Objects.equals(image.getId(), imageId)).map(Image::getBytes).findFirst().orElse(null);
+    }
+
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT ID, PicType, GroupID, TestID, ImageName, Desc, FileName, BinImage, LastMod, " +
                 "FigureSectionID, PixelsPerNM, SortBy, ImageLibraryID FROM Images";
         for (final String course : courseService.getCourseList()) {
@@ -61,23 +70,11 @@ public class ImageService extends BaseService {
                     if (image.getFileName() != null && !"".equals(image.getFileName())) {
                         image.setBytes(rs.getBytes(CommonConstants.EIGHT));
                     }
-                    images.add(image);
+                    cache.put(image.getId(), image);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
-        for (Image image : images) {
-            cache.put(image.getId(), image);
-        }
-        return images;
-    }
-
-    public String getImageNameForId(final Long imageId) {
-        return getAll().stream().filter(image -> Objects.equals(image.getId(), imageId)).findFirst().map(Image::getImageName).orElse(null);
-    }
-
-    public byte[] getImage(final Long imageId) {
-        return getAll().stream().filter(image -> Objects.equals(image.getId(), imageId)).map(Image::getBytes).findFirst().orElse(null);
     }
 }

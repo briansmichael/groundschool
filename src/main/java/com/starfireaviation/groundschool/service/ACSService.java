@@ -2,10 +2,10 @@ package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.ACS;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,16 +20,17 @@ import java.util.Map;
 @Slf4j
 public class ACSService extends BaseService {
 
-    private Map<Long, ACS> cache = new HashMap<>();
+    private final Map<Long, ACS> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
     public List<ACS> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<ACS> acsList = new ArrayList<>();
+        return new ArrayList<>(cache.values());
+    }
+
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT ID, GroupID, ParentID, Code, Description, IsCompletedCode, LastMod FROM ACS";
         for (final String course : courseService.getCourseList()) {
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
@@ -44,15 +45,11 @@ public class ACSService extends BaseService {
                     acs.setDescription(rs.getString(CommonConstants.FIVE));
                     acs.setIsCompletedCode(rs.getLong(CommonConstants.SIX));
                     acs.setLastModified(rs.getDate(CommonConstants.SEVEN));
-                    acsList.add(acs);
+                    cache.put(acs.getId(), acs);
                 }
             } catch (SQLException sqle) {
                 log.error("Error: {}", sqle.getMessage());
             }
         }
-        for (ACS acs : acsList) {
-            cache.put(acs.getId(), acs);
-        }
-        return acsList;
     }
 }

@@ -3,11 +3,11 @@ package com.starfireaviation.groundschool.service;
 import com.starfireaviation.groundschool.config.ApplicationProperties;
 import com.starfireaviation.groundschool.constants.CommonConstants;
 import com.starfireaviation.groundschool.model.entity.Question;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class QuestionService extends BaseService {
 
-    private Map<Long, Question> cache = new HashMap<>();
+    private final Map<Long, Question> cache = new HashMap<>();
 
     @Autowired
     private AnswerService answerService;
@@ -41,50 +41,11 @@ public class QuestionService extends BaseService {
     private ApplicationProperties applicationProperties;
 
     public List<Question> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<Question> questions = new ArrayList<>();
-        initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
-        final String query = "SELECT QuestionID, QuestionText, ChapterID, SMCID, SourceID, LastMod, Explanation, "
-                + "OldQID, LSCID FROM Questions";
-        for (final String course : courseService.getCourseList()) {
-            try (Connection sqlLiteConn = getSQLLiteConnection(course);
-                 PreparedStatement ps = sqlLiteConn.prepareStatement(query);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    final Question question = new Question();
-                    question.setQuestionId(rs.getLong(1));
-                    question.setText(decrypt(rs.getString(2)));
-                    question.setChapterId(rs.getLong(CommonConstants.THREE));
-                    question.setSmcId(rs.getLong(CommonConstants.FOUR));
-                    question.setSource(rs.getString(CommonConstants.FIVE));
-                    question.setLastModified(rs.getDate(CommonConstants.SIX));
-                    //question.setExplanation(Jsoup.parse(decrypt(rs.getString(CommonConstants.SEVEN))).text());
-                    question.setExplanation(processImages(decrypt(rs.getString(CommonConstants.SEVEN))));
-                    question.setOldQuestionId(rs.getLong(CommonConstants.EIGHT));
-                    question.setLscId(rs.getLong(CommonConstants.NINE));
-                    questions.add(question);
-                }
-            } catch (SQLException | InvalidCipherTextException e) {
-                log.error("Error: {}", e.getMessage());
-            }
-        }
-        for (Question question : questions) {
-            cache.put(question.getQuestionId(), question);
-        }
-        return questions;
+        return new ArrayList<>(cache.values());
     }
 
     public List<Question> getQuestionsForChapter(final Long chapterId) {
         return getAll().stream().filter(question -> Objects.equals(question.getChapterId(), chapterId)).collect(Collectors.toList());
-    }
-
-    public List<Long> getQuestionIDsForChapter(final Long chapterId) {
-        return getQuestionsForChapter(chapterId)
-                .stream()
-                .map(Question::getQuestionId)
-                .collect(Collectors.toList());
     }
 
     public Question getQuestion(final Long questionId) {
@@ -112,5 +73,34 @@ public class QuestionService extends BaseService {
             returnText.replace(0, returnText.length(), replacementText);
         }
         return returnText.toString();
+    }
+
+    @PostConstruct
+    public void loadData() {
+        initCipher(applicationProperties.getSecretKey(), applicationProperties.getInitVector());
+        final String query = "SELECT QuestionID, QuestionText, ChapterID, SMCID, SourceID, LastMod, Explanation, "
+                + "OldQID, LSCID FROM Questions";
+        for (final String course : courseService.getCourseList()) {
+            try (Connection sqlLiteConn = getSQLLiteConnection(course);
+                 PreparedStatement ps = sqlLiteConn.prepareStatement(query);
+                 ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    final Question question = new Question();
+                    question.setQuestionId(rs.getLong(1));
+                    question.setText(decrypt(rs.getString(2)));
+                    question.setChapterId(rs.getLong(CommonConstants.THREE));
+                    question.setSmcId(rs.getLong(CommonConstants.FOUR));
+                    question.setSource(rs.getString(CommonConstants.FIVE));
+                    question.setLastModified(rs.getDate(CommonConstants.SIX));
+                    //question.setExplanation(Jsoup.parse(decrypt(rs.getString(CommonConstants.SEVEN))).text());
+                    question.setExplanation(processImages(decrypt(rs.getString(CommonConstants.SEVEN))));
+                    question.setOldQuestionId(rs.getLong(CommonConstants.EIGHT));
+                    question.setLscId(rs.getLong(CommonConstants.NINE));
+                    cache.put(question.getQuestionId(), question);
+                }
+            } catch (SQLException | InvalidCipherTextException e) {
+                log.error("Error: {}", e.getMessage());
+            }
+        }
     }
 }

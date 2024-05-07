@@ -1,10 +1,10 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.FigureSection;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,19 +19,19 @@ import java.util.Map;
 @Slf4j
 public class FigureSectionService extends BaseService {
 
-    private Map<Long, FigureSection> cache = new HashMap<>();
+    private final Map<Long, FigureSection> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
     public List<FigureSection> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<FigureSection> figureSectionList = new ArrayList<>();
+        return new ArrayList<>(cache.values());
+    }
+
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT FigureSectionID, FigureSection, LastMod FROM FigureSections";
         for (final String course : courseService.getCourseList()) {
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -40,15 +40,11 @@ public class FigureSectionService extends BaseService {
                     figureSection.setFigureSectionId(rs.getLong(1));
                     figureSection.setFigureSection(rs.getString(2));
                     figureSection.setLastModified(rs.getDate(3));
-                    figureSectionList.add(figureSection);
+                    cache.put(figureSection.getFigureSectionId(), figureSection);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
-        for (FigureSection figureSection : figureSectionList) {
-            cache.put(figureSection.getFigureSectionId(), figureSection);
-        }
-        return figureSectionList;
     }
 }

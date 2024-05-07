@@ -1,10 +1,10 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.QuestionTest;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,20 +19,20 @@ import java.util.Map;
 @Slf4j
 public class QuestionTestService extends BaseService {
 
-    private Map<Long, QuestionTest> cache = new HashMap<>();
+    private final Map<Long, QuestionTest> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
     public List<QuestionTest> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<QuestionTest> questionTestList = new ArrayList<>();
+        return new ArrayList<>(cache.values());
+    }
+
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT ID, QuestionID, TestID, IsLinked, SortBy, LinkChapter, IsImportant "
                 + "FROM QuestionsTests";
         for (final String course : courseService.getCourseList()) {
-            log.info("Updating {} info...", course);
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
                  PreparedStatement ps = sqlLiteConn.prepareStatement(query);
                  ResultSet rs = ps.executeQuery()) {
@@ -45,15 +45,11 @@ public class QuestionTestService extends BaseService {
                     questionTest.setSortBy(rs.getLong(5));
                     questionTest.setLinkChapter(rs.getLong(6));
                     questionTest.setIsImportant(rs.getLong(7));
-                    questionTestList.add(questionTest);
+                    cache.put(questionTest.getId(), questionTest);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
-        for (QuestionTest questionTest : questionTestList) {
-            cache.put(questionTest.getId(), questionTest);
-        }
-        return questionTestList;
     }
 }

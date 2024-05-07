@@ -1,10 +1,10 @@
 package com.starfireaviation.groundschool.service;
 
 import com.starfireaviation.groundschool.model.entity.Ref;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,16 +19,17 @@ import java.util.Map;
 @Slf4j
 public class RefService extends BaseService {
 
-    private Map<Long, Ref> cache = new HashMap<>();
+    private final Map<Long, Ref> cache = new HashMap<>();
 
     @Autowired
     private CourseService courseService;
 
     public List<Ref> getAll() {
-        if (!CollectionUtils.isEmpty(cache)) {
-            return new ArrayList<>(cache.values());
-        }
-        final List<Ref> refs = new ArrayList<>();
+        return new ArrayList<>(cache.values());
+    }
+
+    @PostConstruct
+    public void loadData() {
         final String query = "SELECT RefID, RefText, LastMod FROM Refs";
         for (final String course : courseService.getCourseList()) {
             try (Connection sqlLiteConn = getSQLLiteConnection(course);
@@ -40,15 +41,11 @@ public class RefService extends BaseService {
                     ref.setRefId(remoteId);
                     ref.setRefText(rs.getString(2));
                     ref.setLastModified(rs.getDate(3));
-                    refs.add(ref);
+                    cache.put(ref.getRefId(), ref);
                 }
             } catch (SQLException e) {
                 log.error("Error: {}", e.getMessage());
             }
         }
-        for (Ref ref : refs) {
-            cache.put(ref.getRefId(), ref);
-        }
-        return refs;
     }
 }
