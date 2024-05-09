@@ -1,4 +1,4 @@
 groundschool:
   secret-key: <secret-key>
   init-vector: <init-vector>
-  db-source-location: <db-source-location>
+  db-source-location: /user/src/groundschool/src/databases
