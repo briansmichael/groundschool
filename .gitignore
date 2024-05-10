@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+gsUpdate*.sh
+hidden_application.yaml
+*.db

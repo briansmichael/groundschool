@@ -5,6 +5,7 @@ import com.starfireaviation.groundschool.model.entity.Quiz;
 import com.starfireaviation.groundschool.model.entity.QuizQuestion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@DependsOn("questionService")
 public class QuizService extends BaseService {
 
     @Autowired
