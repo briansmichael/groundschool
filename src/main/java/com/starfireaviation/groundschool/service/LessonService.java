@@ -3,6 +3,7 @@ package com.starfireaviation.groundschool.service;
 import com.starfireaviation.groundschool.model.entity.Lesson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@DependsOn("questionService")
 public class LessonService extends BaseService {
 
     @Autowired

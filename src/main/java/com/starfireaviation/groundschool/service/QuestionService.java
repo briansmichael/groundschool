@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@DependsOn("answerService")
 public class QuestionService extends BaseService {
 
     private final Map<Long, Question> cache = new HashMap<>();

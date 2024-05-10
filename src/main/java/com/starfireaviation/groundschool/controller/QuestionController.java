@@ -9,6 +9,7 @@ import com.starfireaviation.groundschool.service.QuestionService;
 import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -22,6 +23,7 @@ import java.util.Objects;
 
 @Controller
 @Slf4j
+@DependsOn("questionService")
 public class QuestionController {
 
     @Autowired
