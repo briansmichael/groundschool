@@ -24,7 +24,7 @@ RUN chmod 755 src/databases/*.db
 RUN mv hidden_application.yaml src/main/resources/application.yaml
 
 # Build the application
-RUN mvn clean install -e
+RUN mvn clean install -e -X
 
 # Start the application
 CMD ["java", "-jar", "target/groundschool-0.0.1-SNAPSHOT.jar"]
