@@ -37,6 +37,7 @@ public abstract class BaseService {
         Connection sqlLiteConn = null;
         try {
             String sqlLiteJDBCUrl = "jdbc:sqlite:" + applicationProperties.getDbSrcLocation() + course + ".db";
+            log.info("Getting DB connection: {}", sqlLiteJDBCUrl);
             DriverManager.registerDriver(new org.sqlite.JDBC());
             sqlLiteConn = DriverManager.getConnection(sqlLiteJDBCUrl);
         } catch (SQLException e) {
