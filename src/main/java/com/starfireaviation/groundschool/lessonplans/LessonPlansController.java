@@ -1,6 +1,5 @@
 package com.starfireaviation.groundschool.lessonplans;
 
-import com.starfireaviation.groundschool.common.ActivityType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.repository.ListCrudRepository;
@@ -97,9 +96,4 @@ record LessonPlan(@Id Long id, Date createdAt, Date updatedAt, String title, Str
 
 @Table("lesson_plan_activity")
 record LessonPlanActivity(@Id Long id, Date createdAt, Date updatedAt, Long lessonPlanId, Long activityId) {
-}
-
-@Table("activity")
-record Activity(@Id Long id, Date createdAt, Date updatedAt, String title, String duration, ActivityType activityType,
-                Long referenceId) {
 }

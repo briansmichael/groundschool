@@ -1,5 +1,7 @@
 package com.starfireaviation.groundschool.users;
 
+import com.starfireaviation.groundschool.common.NotificationPreference;
+import com.starfireaviation.groundschool.common.Role;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Exchange;
@@ -57,11 +59,14 @@ class Users {
     }
 }
 
-interface UserRepository extends ListCrudRepository<User, Integer> {
+interface UserRepository extends ListCrudRepository<User, Long> {
 }
 
 @Table("users")
-record User(@Id Integer id) {
+record User(@Id Long id, String email, boolean emailVerified, boolean emailEnabled, String sms, boolean smsVerified,
+            boolean smsEnabled, String slack, boolean slackVerified, boolean slackEnabled, String username,
+            String password, String firstName, String lastName, String certificateNumber, String code, Role role,
+            NotificationPreference notificationPreference, Integer age) {
 }
 
 @Configuration

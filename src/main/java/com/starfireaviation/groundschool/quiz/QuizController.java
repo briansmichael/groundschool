@@ -72,5 +72,5 @@ interface QuizRepository extends ListCrudRepository<Quiz, Long> {
 }
 
 @Table("quizzes")
-record Quiz(@Id Long id, Set<Integer> questionIds) {
+record Quiz(@Id Long id, String title, Set<Long> questionIds, Long lessonPlanId, QuizType type) {
 }
