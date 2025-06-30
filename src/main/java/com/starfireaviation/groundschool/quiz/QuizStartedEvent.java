@@ -1,4 +1,4 @@
 package com.starfireaviation.groundschool.quiz;
 
-public record QuizStartedEvent(int id) {
+public record QuizStartedEvent(Long id) {
 }

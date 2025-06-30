@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
+
 @Controller
 @ResponseBody
 @RequestMapping("/lessons")
@@ -43,9 +45,10 @@ class Lessons {
     }
 }
 
-interface LessonRepository extends ListCrudRepository<Lesson, Integer> {
+interface LessonRepository extends ListCrudRepository<Lesson, Long> {
 }
 
 @Table("lessons")
-record Lesson(@Id Integer id) {
+record Lesson(@Id Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String group, String chapter,
+              String title, String text, boolean required) {
 }

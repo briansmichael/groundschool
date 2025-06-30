@@ -1,4 +1,4 @@
 package com.starfireaviation.groundschool.events;
 
-public record EventCompletedEvent(int id) {
+public record EventCompletedEvent(Long id) {
 }

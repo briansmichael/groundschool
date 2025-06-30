@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -44,18 +46,20 @@ class Questions {
         System.out.println("saved [" + saved + "]");
     }
 
-    boolean exists(Integer id) {
+    boolean exists(Long id) {
         return this.questionRepository.existsById(id);
     }
 }
 
-interface QuestionRepository extends ListCrudRepository<Question, Integer> {
+interface QuestionRepository extends ListCrudRepository<Question, Long> {
 }
 
 @Table("questions")
-record Question(@Id Integer id, Set<Answer> answers) {
+record Question(@Id Long id, Long oldQuestionId, String text, Long chapterId, Long smcId, List<String> acsCodes,
+                String source, LocalDateTime lastModified, String explanation, String learningStatementCode,
+                Set<Answer> answers) {
 }
 
 @Table("answers")
-record Answer(@Id Integer id) {
+record Answer(@Id Long id, String text, boolean correct, String choice) {
 }

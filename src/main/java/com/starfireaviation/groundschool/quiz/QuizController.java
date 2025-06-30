@@ -68,9 +68,9 @@ class QuizService {
     }
 }
 
-interface QuizRepository extends ListCrudRepository<Quiz, Integer> {
+interface QuizRepository extends ListCrudRepository<Quiz, Long> {
 }
 
 @Table("quizzes")
-record Quiz(@Id Integer id, Set<Integer> questionIds) {
+record Quiz(@Id Long id, Set<Integer> questionIds) {
 }

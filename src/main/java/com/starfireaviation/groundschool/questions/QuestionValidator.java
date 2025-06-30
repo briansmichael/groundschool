@@ -11,7 +11,7 @@ public class QuestionValidator {
         this.questions = questions;
     }
 
-    public void exists(int id) throws Exception {
+    public void exists(Long id) throws Exception {
         if (!questions.exists(id)) {
             throw new Exception();
         }

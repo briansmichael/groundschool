@@ -1,4 +1,4 @@
 package com.starfireaviation.groundschool.events;
 
-public record EventCreatedEvent(int id) {
+public record EventCreatedEvent(Long id) {
 }
